@@ -1,0 +1,2 @@
+CREATE DATABASE transcendence;
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

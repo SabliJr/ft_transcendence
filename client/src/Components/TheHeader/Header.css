@@ -1,0 +1,344 @@
+._logo {
+  font-size: 3rem;
+  color: #ffffff;
+}
+
+._header_logo {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+._header_logo span {
+    font-family: "Instrument Serif", serif;
+  font-style: italic;
+}
+
+.Header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1.5rem auto 0.5rem;
+  padding: 0.5rem 2rem;
+  max-width: 1280px;
+  position: relative;
+  z-index: 1000;
+}
+
+/* ._header_get_started_btn,
+._header_login_btn {
+  font-size: 1.2rem;
+  border: transparent;
+  border-radius: 0.8rem;
+  padding: 0.6rem 0.8rem;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  background-color: rgb(0, 102, 255);
+  color: #ffffff;
+  cursor: pointer;
+} */
+
+/* ._header_login_btn {
+  font-size: 1.3rem;
+  font-family: "DM Sans", sans-serif;
+  color: #282828;
+  border: #282828 solid 1px;
+  cursor: pointer;
+  background-color: transparent;
+  color: #ffffff;
+} */
+
+._btns_container {
+  display: flex;
+  gap: .5rem;
+  border: .8px solid #282828;
+  padding: .2rem;
+  border-radius: 1rem;
+  cursor: pointer;
+}
+
+._header_icons {
+  font-size: 2rem;
+}
+
+._nav {
+  display: flex;
+  align-items: center;
+  gap: 1.3rem;
+  position: -webkit-sticky;
+  margin: 0.3rem auto;
+  padding: 0.8rem 1rem;
+  border-radius: 0.8rem;
+  transition: background-color 0.3s ease, box-shadow 0.3s ease;
+  background-color: rgb(255, 255, 255);
+  /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
+    border: 1px solid rgb(230, 231, 232);
+
+}
+
+._nav_scrolled {
+  position: fixed;
+  top: 1rem;
+  z-index: 1000;
+  background-color: rgb(255, 255, 255);
+  border: 1px solid rgb(230, 231, 232);
+  /* border-color: ; */
+  /* box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px; */
+}
+
+._nav li a {
+  color: #282828;
+}
+
+._nav li {
+  font-size: 1.3rem;
+  font-weight: 500;
+  font-family: "Inter Tight", sans-serif;
+  cursor: pointer;
+  list-style: none;
+}
+
+._header_btn {
+  font-family: "Inter Tight", sans-serif;
+  font-weight: 500;
+  font-size: 1.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: 0.5rem;
+  background: rgb(0, 102, 255);
+  font-weight: 700;
+  border: transparent;
+  color: #ffffff;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+@media screen and (max-width: 1042px) {
+  ._header_logo {
+    width: 10rem;
+  }
+
+  ._nav li {
+    font-size: 1.2rem;
+  }
+
+  @media screen and (max-width: 850px) {
+    ._nav li {
+      font-size: 1rem;
+    }
+/* 
+    ._header_get_started_btn {
+      font-size: 1rem;
+    } */
+
+    /* ._header_login_btn {
+      font-size: 1.4rem;
+    } */
+
+    .Header {
+        margin: 1.5rem auto 0;
+        padding: 0.5rem 0.3rem;
+        max-width: 100%;
+      }
+
+    @media screen and (max-width: 600px) {
+      .Header {
+        margin: 1.5rem auto 0;
+        padding: 0.5rem 0.3rem;
+        flex-direction: column;
+      }
+
+      ._btns_container {
+        display: none;
+      }
+
+      ._header_logo {
+        width: 8rem;
+      }
+
+      ._nav_scrolled {
+        top: 0.3rem;
+        width: 97%;
+        border-radius: 1rem;
+      }
+
+      ._nav {
+        gap: 1rem;
+        justify-content: center;
+        margin: 0.3rem auto;
+        padding: 0.6rem;
+        border-radius: 0.8rem;
+      }
+
+      ._header_btn {
+        font-size: 1rem;
+        padding: 0.3rem 0.5rem;
+        font-weight: 600;
+      }
+    }
+  }
+}
+
+/* Dropdown Styles */
+.dropdown-wrapper {
+  position: relative;
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 0.5rem);
+  right: 0;
+  background-color: white;
+  border: 1px solid rgb(230, 231, 232);
+  border-radius: 0.8rem;
+  padding: 1rem;
+  min-width: 300px;
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  z-index: 1001;
+}
+
+.dropdown-header {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgb(230, 231, 232);
+}
+
+.btn-login,
+.btn-signup {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(230, 231, 232);
+  background-color: white;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-signup {
+  background-color: rgb(0, 102, 255);
+  color: white;
+  border-color: rgb(0, 102, 255);
+}
+
+/* .gem-icon {
+  width: 2rem;
+  height: 2rem;
+  color: #282828;
+} */
+
+.dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid rgb(230, 231, 232);
+}
+
+.item-label {
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  color: #282828;
+}
+
+.item-value {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #282828;
+}
+
+.currency-badge {
+  width: 1.5rem;
+  height: 1.5rem;
+  background-color: rgb(0, 102, 255);
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+.chevron-icon {
+  font-size: 1.2rem;
+}
+
+.theme-section {
+  padding: 1rem 0;
+}
+
+.theme-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.theme-btn {
+  flex: 1;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgb(230, 231, 232);
+  background-color: white;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 600;
+  cursor: pointer;
+  color: #282828;
+}
+
+.theme-btn.active {
+  background-color: rgb(0, 102, 255);
+  color: white;
+  border-color: rgb(0, 102, 255);
+}
+
+.theme-btn.active-dark {
+  background-color: #282828;
+  color: white;
+  border-color: #282828;
+}
+
+.dropdown-item-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.dropdown-item {
+  cursor: pointer;
+}
+
+.sub-dropdown {
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin: 4px 0;
+  overflow: hidden;
+}
+
+.sub-dropdown-item {
+  padding: 10px 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s;
+}
+
+.sub-dropdown-item:hover {
+  background-color: #e8e8e8;
+}
+
+.sub-dropdown-item.selected {
+  background-color: #e4f0fb;
+  font-weight: 500;
+}
+
+.sub-dropdown-item .currency-badge {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+}

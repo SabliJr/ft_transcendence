@@ -1,0 +1,84 @@
+.hero {
+  text-align: center;
+  margin: 6rem auto 1rem;
+  max-width: 1280px;
+  position: relative;
+  padding: 1rem;
+}
+
+.hero h2 {
+  font-size: 2.8rem;
+  width: 55%;
+  margin: 0 auto .5rem;
+  font-weight: 600;
+  font-family: "DM Sans", sans-serif;
+  color: #1e2024;
+  line-height: 1;
+}
+
+.hero h2 span {
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+}
+
+._hero_text {
+  width: 60%;
+  margin: 0 auto 2rem;
+  font-size: 1.3rem;
+  line-height: 1.3;
+  color: #7d7c7c;
+  font-family: "DM Sans", sans-serif;
+}
+
+._hero_bton_container {
+  margin: 1.5rem 0;
+}
+
+._hero_btn {
+  border-radius: 0.8rem;
+  border: none;
+  background-color: #0066ff;
+  color: #ffffff;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  font-family: "DM Sans", sans-serif;
+}
+
+.promImg {
+  width: 100%;
+  max-width: 960px;
+  display: block;
+  margin: 1rem auto 0;
+  border-radius: 1rem;
+  border: 0.5px solid rgba(226, 226, 224, 0.6);
+  box-shadow: rgba(0, 0, 0, 0.08) 0px 0px 5px 0px, rgba(0, 0, 0, 0.08) 0px 0px 1px 0px;
+}
+
+._rgb_bg {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -110px;
+  height: 420px;
+  z-index: -1;
+  background: radial-gradient(circle at center, rgba(47,211,183,0.12), rgba(0,102,255,0.08));
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+@media (max-width: 600px) {
+  .hero h2 {
+    font-size: 1.6rem;
+  }
+  ._hero_text {
+    width: 92%;
+    font-size: 1rem;
+  }
+  .promImg {
+    max-width: 96%;
+    border-radius: 0.6rem;
+  }
+}
