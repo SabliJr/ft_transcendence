@@ -6,13 +6,12 @@ import NotFound from "./Pages/Info/NotFound";
 import Contact from "./Pages/Info/Contact";
 import PrivacyPolicy from "./Pages/Legal/privacyPolicy";
 import TermsOfService from "./Pages/Legal/TermsOfService";
-// import SubscriptionSuccess from "./src/Pages/paymentSuccess";
 import Signup from "./Pages/Auth/signup";
 import Login from "./Pages/Auth/Login";
 // import SuccessPage from "./src/utils/channelConnectSuccess";
 // import ProtectedRoute from "./utils/protect_routes";
-// import Dashboard from "./Pages/Dashboard";
-// import WaitList from "./Pages/waitlist";
+import About from "./Pages/About/index";
+import Market from "./Pages/Market/index";
 
 const RoutesFile = () => {
   return (
@@ -22,10 +21,10 @@ const RoutesFile = () => {
         <Route path='/contact' element={<Contact />} />
         <Route path='/terms-of-service' element={<TermsOfService />} />
         <Route path='/privacy-policy' element={<PrivacyPolicy />} />
-        {/* <Route path='/success' element={<SubscriptionSuccess />} /> */}
+        <Route path='/market' element={<Market />} />
         <Route path='/signup' element={<Signup />} />
         <Route path='/login' element={<Login />} />
-        {/* <Route path='/success' element={<SuccessPage />} /> */}
+        <Route path='/about' element={<About />} />
         <Route path='/*' element={<NotFound />} />
         {/* <Route path='/waitlist' element={<WaitList />} /> */}
         {/* <Route path='/dashboard' element={<Dashboard />} /> */}

@@ -1,0 +1,209 @@
+._questions_container {
+  text-align: center;
+  margin: 8rem auto;
+}
+
+._questions_container h2 {
+  font-size: 2.8rem;
+  margin: 0.5rem auto;
+  color: #282828;
+  font-family: "DM Sans", sans-serif;
+}
+
+._q_title_text {
+  font-size: 1.5rem;
+  color: rgb(123, 130, 142);
+  font-size: 1.6rem;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+}
+
+._questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 2.8rem auto;
+  text-align: left;
+  max-width: 80%;
+}
+
+._questions_div {
+  background-color: #f7f9f9;
+  padding: 1rem 1.5rem;
+  border-radius: 0.6rem;
+  width: 70%;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+}
+
+._questions_div p {
+  color: rgb(123, 130, 142);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 1rem auto;
+}
+
+._q_div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+._questions_div_none {
+  display: none;
+}
+
+._questions_div_reveal {
+  display: block;
+}
+
+._les_questions_reveal {
+  color: #282828;
+}
+
+._les_questions {
+    color: rgb(123, 130, 142);
+}
+
+._q_icon {
+    color: #282828;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+._questions_icon {
+  width: 6.5rem;
+}
+
+.q_chat_logo {
+  width: 6rem;
+  margin: 1.3rem auto;
+}
+
+._q_chat_title {
+  font-size: 1.5rem;
+  font-family: "Inter Tight", sans-serif;
+  color: #ffffff;
+  position: relative;
+}
+
+._q_chat_text {
+  color: #b6b6b6;
+  font-size: 1.3rem;
+  margin: 1rem auto 2rem;
+  line-height: 1.5;
+  width: 90%;
+}
+
+._q_chat_text span {
+  color: #ffffff;
+  font-style: italic;
+}
+
+._q_chat_div {
+  width: 65%;
+  margin: 12rem auto;
+}
+
+._get_started_btn {
+  border-radius: 0.8rem;
+  border: transparent;
+  background-color: #ff0000;
+  font-size: 1.3rem;
+  padding: 0.8rem 1.2rem;
+  font-family: "DM Sans", sans-serif;
+  font-weight: 700;
+  cursor: pointer;
+  color: #ffffff;
+  font-style: normal;
+  text-transform: uppercase;
+  box-shadow: 0 4px 20px rgba(74, 144, 226, 0.3);
+}
+
+._get_started_btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 30px rgba(59, 130, 246, 0.6);
+}
+
+@media screen and (max-width: 1042px) {
+  ._questions_div {
+    padding: 1rem 1rem;
+    width: 80%;
+  }
+
+  @media screen and (max-width: 850px) {
+    ._questions {
+      max-width: 99%;
+      margin: 2rem auto;
+    }
+
+    ._q_chat_div {
+      width: 95%;
+      margin: 5rem auto;
+    }
+
+    ._q_chat_text {
+      margin: 0.3rem auto 2rem;
+      font-size: 1.1rem;
+    }
+
+    ._get_started_btn {
+      font-size: 1rem;
+    }
+
+    ._trial_text {
+      font-size: 1rem;
+    }
+
+    @media screen and (max-width: 600px) {
+      ._questions_container {
+        margin: 0rem auto;
+      }
+
+      ._questions_div {
+        width: 95%;
+      }
+
+      ._questions_div h4 {
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      ._q_chat_div {
+        width: 99%;
+      }
+
+      .q_chat_logo {
+        width: 4.2rem;
+      }
+
+      ._q_chat_title {
+        font-size: 1.3rem;
+      }
+
+      ._q_chat_text {
+        margin: 0.3rem auto 2rem;
+        width: 100%;
+        font-size: 1.1rem;
+        line-height: 1.3;
+      }
+
+      ._get_started_btn {
+        font-size: 1rem;
+      }
+
+      ._q_chat_div {
+        margin: 5rem auto 0;
+      }
+
+      ._questions_container h2 {
+        font-size: 1.8rem;
+      }
+
+      ._q_title_text {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}
