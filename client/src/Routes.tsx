@@ -1,14 +1,14 @@
-import React from "react";
+// import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Home from "./Pages/Home";
-import NotFound from "./Pages/NotFound";
-import Contact from "./Pages/Contact";
-import PrivacyPolicy from "./Pages/privacyPolicy";
-import TermsOfService from "./Pages/TermsOfService";
+import Home from "./Pages/Home/Home";
+import NotFound from "./Pages/Info/NotFound";
+import Contact from "./Pages/Info/Contact";
+import PrivacyPolicy from "./Pages/Legal/privacyPolicy";
+import TermsOfService from "./Pages/Legal/TermsOfService";
 // import SubscriptionSuccess from "./src/Pages/paymentSuccess";
-import Signup from "./Pages/signup";
-import Login from "./Pages/Login";
+import Signup from "./Pages/Auth/signup";
+import Login from "./Pages/Auth/Login";
 // import SuccessPage from "./src/utils/channelConnectSuccess";
 // import ProtectedRoute from "./utils/protect_routes";
 // import Dashboard from "./Pages/Dashboard";

@@ -1,53 +1,16 @@
 import axios from "axios";
 import type { loginInfo, iRegistrationInfo } from "../Types/UserStuffTypes";
 
-const SERVER_URL =
-  import.meta.env?.NODE_ENV === "production"
-    ? "https://www.api.humanizewriter.com"
-    : "http://localhost:8000";
+// const SERVER_URL =
+//   import.meta.env?.NODE_ENV === "production"
+//     ? "https://yieldbook.com"
+//     : "http://localhost:8000";
 
-console.log(SERVER_URL);
-
-interface iHumanize {
-  english_region: string;
-  writing_tone: string;
-  input_text: string;
-}
-
-// ------------------ Payment --------------------
-const onSuccessCheckingOut = async (session_id: string) => {
-  return await axios.get(`${SERVER_URL}/checkout_success`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    params: { session_id },
-    withCredentials: true,
-  });
-};
-
-const onCheckingOut = async (price_id: string) => {
-  return await axios.get(`${SERVER_URL}/check_out`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    params: { price_id },
-    withCredentials: true,
-  });
-};
-
-const onCheckOutOneTime = async (price_id: string) => {
-  return await axios.get(`${SERVER_URL}/check_out_onetime`, {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    params: { price_id },
-    withCredentials: true,
-  });
-};
+const AUTH_SERVER = "http://localhost:8000";
 
 // ------------------------ Auth -------------------------
 const onAuthWithGoogle = async (token: string) => {
-  return await axios.get(`${SERVER_URL}/auth/google/callback`, {
+  return await axios.get(`${AUTH_SERVER}/auth/google/callback`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -57,7 +20,7 @@ const onAuthWithGoogle = async (token: string) => {
 };
 
 const onRefreshToken = async () => {
-  return await axios.get(`${SERVER_URL}/refresh-token`, {
+  return await axios.get(`${AUTH_SERVER}/refresh-token`, {
     headers: {
       "Content-Type": "application/json",
     },
@@ -66,13 +29,13 @@ const onRefreshToken = async () => {
 };
 
 const onLogout = async () => {
-  return await axios.get(`${SERVER_URL}/logout`, {
+  return await axios.get(`${AUTH_SERVER}/logout`, {
     withCredentials: true,
   });
 };
 
 const onLogin = async (loginData: loginInfo) => {
-  return await axios.post(`${SERVER_URL}/login`, JSON.stringify(loginData), {
+  return await axios.post(`${AUTH_SERVER}/login`, JSON.stringify(loginData), {
     headers: {
       "Content-Type": "application/json",
     },
@@ -82,7 +45,7 @@ const onLogin = async (loginData: loginInfo) => {
 
 const onVerifyEmail = async (token: string) => {
   return await axios.post(
-    `${SERVER_URL}/verify-email`,
+    `${AUTH_SERVER}/verify-email`,
     JSON.stringify({ token }),
     {
       headers: {
@@ -95,7 +58,7 @@ const onVerifyEmail = async (token: string) => {
 
 const onRequestVerificationAgain = async (email: string) => {
   return await axios.post(
-    `${SERVER_URL}/request-verification-again`,
+    `${AUTH_SERVER}/request-verification-again`,
     JSON.stringify({ email }),
     {
       headers: {
@@ -108,7 +71,7 @@ const onRequestVerificationAgain = async (email: string) => {
 
 const onRegistration = async (registrationData: iRegistrationInfo) => {
   return await axios.post(
-    `${SERVER_URL}/register`,
+    `${AUTH_SERVER}/register`,
     JSON.stringify(registrationData),
     {
       headers: {
@@ -119,25 +82,7 @@ const onRegistration = async (registrationData: iRegistrationInfo) => {
   );
 };
 
-// ------------------------ Write -------------------------
-
-const onHumanize = async (to_humanize: iHumanize) => {
-  return await axios.post(
-    `${SERVER_URL}/services/humanize`,
-    JSON.stringify({ to_humanize }),
-    {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    }
-  );
-};
-
 export {
-  onSuccessCheckingOut,
-  onCheckingOut,
-  onCheckOutOneTime,
   onAuthWithGoogle,
   onRefreshToken,
   onLogout,
@@ -145,5 +90,4 @@ export {
   onRequestVerificationAgain,
   onVerifyEmail,
   onLogin,
-  onHumanize,
 };
