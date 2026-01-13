@@ -2,10 +2,6 @@ import React, { useState } from "react";
 import "./faqs.css";
 
 import { PiPlusBold } from "react-icons/pi";
-// import { useNavigate } from "react-router-dom";
-// import { HiShieldCheck } from "react-icons/hi";
-
-// import { Link as ScrollLink } from "react-scroll";
 
 const Index = () => {
   // const navigate = useNavigate();
@@ -34,8 +30,7 @@ const Index = () => {
               className={
                 revealQuestion[0] ? "_les_questions_reveal" : "_les_questions"
               }>
-              Do I need design experience to use this & How is this different
-              from Canva/Photoshop ?
+              Is my portfolio data secure on Yieldbook?
             </h4>
             <PiPlusBold className='_q_icon' onClick={() => toggleQuestion(0)} />
           </div>
@@ -45,11 +40,9 @@ const Index = () => {
                 ? "_questions_div_reveal"
                 : "_questions_div_none"
             }>
-            Nope. We built this for creators, not designers. Unlike Canva or
-            Photoshop, you don’t start with a blank page and endless tools. Our
-            AI gives you ready-to-edit thumbnail concepts tailored for YouTube.
-            You get professional-looking results in minutes without needing
-            design skills.
+            Yes, we take security seriously. Your portfolio data is stored securely,
+            and we use encryption to protect your account. Yieldbook is read-only and
+            doesn't connect to exchange wallets, so your actual crypto assets remain safe.
           </p>
         </div>
         <div className='_questions_div'>
@@ -58,8 +51,7 @@ const Index = () => {
               className={
                 revealQuestion[1] ? "_les_questions_reveal" : "_les_questions"
               }>
-              Will these thumbnails actually improve my CTR (click-through
-              rate)?
+              Can I track multiple crypto portfolios?
             </h4>
             <PiPlusBold className='_q_icon' onClick={() => toggleQuestion(1)} />
           </div>
@@ -69,15 +61,9 @@ const Index = () => {
                 ? "_questions_div_reveal"
                 : "_questions_div_none"
             }>
-            While no tool can guarantee clicks, our AI is trained on thousands
-            of high-performing YouTube thumbnails across different niches. That
-            means every design you generate starts from proven patterns that
-            viewers respond to. Instead of staring at a blank canvas, you get
-            multiple strong concepts instantly, then fine-tune them with our
-            editor. The result: you spend less time designing and more time
-            testing thumbnails that look like the ones viewers already click on.
-            Many creators see their CTR rise simply because they can create and
-            test more high-quality thumbnails, faster.
+            Absolutely! Yieldbook allows you to create and manage multiple portfolios.
+            Whether you're separating long-term holdings from trading portfolios or
+            tracking different investment strategies, you can organize everything in one place.
           </p>
         </div>
         <div className='_questions_div'>
@@ -86,7 +72,7 @@ const Index = () => {
               className={
                 revealQuestion[2] ? "_les_questions_reveal" : "_les_questions"
               }>
-              What makes your AI different from other AI design tools?
+              How accurate is the market data?
             </h4>
             <PiPlusBold className='_q_icon' onClick={() => toggleQuestion(2)} />
           </div>
@@ -96,10 +82,9 @@ const Index = () => {
                 ? "_questions_div_reveal"
                 : "_questions_div_none"
             }>
-            Most AI design tools are generic. Our AI is specialized for YouTube
-            thumbnails — trained to understand what grabs attention on the
-            platform. That means layouts, colors, text placement, and styles are
-            optimized for click-through rate, not just “pretty graphics.”
+            We source real-time cryptocurrency data from trusted third-party providers.
+            While we strive for accuracy, market data may occasionally be delayed or contain
+            minor discrepancies. Always verify critical information before making investment decisions.
           </p>
         </div>
         <div className='_questions_div'>
@@ -108,7 +93,7 @@ const Index = () => {
               className={
                 revealQuestion[3] ? "_les_questions_reveal" : "_les_questions"
               }>
-              What happens if I run out of tokens?
+              What does the AI assistant do?
             </h4>
             <PiPlusBold className='_q_icon' onClick={() => toggleQuestion(3)} />
           </div>
@@ -118,27 +103,12 @@ const Index = () => {
                 ? "_questions_div_reveal"
                 : "_questions_div_none"
             }>
-            If you run out of tokens before your next billing cycle, you can
-            either upgrade your plan or top up with extra tokens instantly.
-            We’ll always notify you before you hit zero so you’re never stuck
-            without being able to create.
+            Our AI assistant helps you understand your portfolio structure, explains
+            crypto assets in simple terms, and provides insights on diversification.
+            It's designed for educational purposes and doesn't provide financial advice.
           </p>
         </div>
       </div>
-      {/* <div className='_q_chat_div'>
-        <h3 className='_q_chat_title'>Do you still have a question?</h3>
-        <p className='_q_chat_text'>
-          Send us an email on <span>info.sablijr@gmail.com</span> and we will
-          get back to you on no time! Otherwise...
-        </p>
-        <div>
-          <button
-            className='_get_started_btn'
-            onClick={() => navigate("/signin")}>
-            Get Started
-          </button>
-        </div>
-      </div> */}
     </main>
   );
 };
