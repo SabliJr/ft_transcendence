@@ -4,7 +4,7 @@ import "./AuthPages.css";
 import LogoIcon from "../../Assets/Icon.png";
 import { useNavigate } from "react-router-dom";
 import { useGoogleLogin } from "@react-oauth/google";
-import { onAuthWithGoogle, onLogin } from "../../API/endpoints";
+// import { onAuthWithGoogle, onLogin } from "../../API/endpoints";
 import { useAuth } from "../../Context/AuthProvider";
 
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -43,7 +43,7 @@ const Login: React.FC = () => {
     pwd: "",
   });
 
-  const { dispatch, setVerificationEmail } = useAuth();
+  const { setVerificationEmail } = useAuth(); // dispatch
 
   const intGoogleLogin = useGoogleLogin({
     onSuccess: (tokenResponse: GoogleLoginResponse) =>
@@ -59,24 +59,25 @@ const Login: React.FC = () => {
 
     try {
       const gVerifyCode = response.code; // Access the ID token directly from the response object
-      const res = await onAuthWithGoogle(gVerifyCode);
+      // const res = await onAuthWithGoogle(gVerifyCode);
+      console.log(gVerifyCode);
 
-      if (res?.status === 201 || res?.status === 202) {
-        const { accessToken } = res.data;
-        const { user_id } = res.data.user;
+      // if (res?.status === 201 || res?.status === 202) {
+      //   const { accessToken } = res.data;
+      //   const { user_id } = res.data.user;
 
-        if (user_id) {
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              accessToken,
-              user_id,
-            },
-          });
+      //   if (user_id) {
+      //     dispatch({
+      //       type: "LOGIN",
+      //       payload: {
+      //         accessToken,
+      //         user_id,
+      //       },
+      //     });
 
-          navigate(`/dashboard/${user_id}`, { replace: true });
-        }
-      }
+      //     navigate(`/dashboard/${user_id}`, { replace: true });
+      //   }
+      // }
     } catch (error: unknown) {
       // Type guard to check if error matches your ApiError interface
       if (error && typeof error === "object" && "response" in error) {
@@ -103,28 +104,28 @@ const Login: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const response = await onLogin(logInData);
+      // const response = await onLogin(logInData);
 
       // If a user email is verified and logged in is successful
-      if (response.status === 202) {
-        // Save the user id and username in the context
-        const { user_id } = response.data.user;
-        setLogInData({ email: "", pwd: "" });
+      // if (response.status === 202) {
+      //   // Save the user id and username in the context
+      //   const { user_id } = response.data.user;
+      //   setLogInData({ email: "", pwd: "" });
 
-        if (user_id) {
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              accessToken: response.data.token,
-              user_id: user_id,
-            },
-          });
+      //   if (user_id) {
+      //     dispatch({
+      //       type: "LOGIN",
+      //       payload: {
+      //         accessToken: response.data.token,
+      //         user_id: user_id,
+      //       },
+      //     });
 
-          navigate(`/dashboard/${user_id}`, { replace: true });
-        } else {
-          navigate("/chose-plan", { replace: true });
-        }
-      }
+      //     navigate(`/dashboard/${user_id}`, { replace: true });
+      //   } else {
+      //     navigate("/chose-plan", { replace: true });
+      //   }
+      // }
     } catch (error: unknown) {
       const apiError = error as ApiError;
       if (apiError.response) {

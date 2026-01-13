@@ -3,12 +3,12 @@ import React, {
   useContext,
   useReducer,
   useState,
-  useEffect,
+  // useEffect,
 } from "react";
 import type { iRegistrationInfo } from "../Types/UserStuffTypes";
-import type { ApiError } from "../Types/GeneralTypes";
+// import type { ApiError } from "../Types/GeneralTypes";
 
-import { onRefreshToken } from "../API/endpoints";
+// import { onRefreshToken } from "../API/endpoints";
 
 type AuthContextType = {
   state: iState;
@@ -63,32 +63,32 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     customer_id: "",
   });
 
-  const path_name = window.location.pathname;
-  useEffect(() => {
-    (async () => {
-      try {
-        const response = await onRefreshToken();
+  // const path_name = window.location.pathname;
+  // useEffect(() => {
+  //   (async () => {
+  //     try {
+  //       const response = await onRefreshToken();
 
-        if (response.status === 200) {
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              accessToken: response.data.accessToken,
-              user_id: response.data.user.user_id,
-            },
-          });
-        }
-      } catch (error: unknown) {
-        const apiError = error as ApiError;
+  //       if (response.status === 200) {
+  //         dispatch({
+  //           type: "LOGIN",
+  //           payload: {
+  //             accessToken: response.data.accessToken,
+  //             user_id: response.data.user.user_id,
+  //           },
+  //         });
+  //       }
+  //     } catch (error: unknown) {
+  //       const apiError = error as ApiError;
 
-        if (apiError?.response?.status !== 403) {
-          console.log("It was 403 status err");
-        } else {
-          dispatch({ type: "LOGOUT" });
-        }
-      }
-    })();
-  }, [path_name]);
+  //       if (apiError?.response?.status !== 403) {
+  //         console.log("It was 403 status err");
+  //       } else {
+  //         dispatch({ type: "LOGOUT" });
+  //       }
+  //     }
+  //   })();
+  // }, [path_name]);
 
   return (
     <AuthContext.Provider

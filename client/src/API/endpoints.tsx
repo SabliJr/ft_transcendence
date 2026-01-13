@@ -82,6 +82,15 @@ const onRegistration = async (registrationData: iRegistrationInfo) => {
   );
 };
 
+// ---------------------- Market ---------------------------
+
+const onGetCoins = async () => {
+  console.log(`The request endpoint: ${AUTH_SERVER}/market/coins`);
+  return await axios.get(`${AUTH_SERVER}/market/coins`, {
+    withCredentials: true,
+  });
+};
+
 export {
   onAuthWithGoogle,
   onRefreshToken,
@@ -90,4 +99,5 @@ export {
   onRequestVerificationAgain,
   onVerifyEmail,
   onLogin,
+  onGetCoins,
 };

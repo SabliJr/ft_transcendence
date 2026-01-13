@@ -1,0 +1,127 @@
+._questions_container {
+  text-align: center;
+  margin: 8rem auto;
+}
+
+._questions_container h2 {
+  font-size: 2.8rem;
+  margin: 0.5rem auto;
+  color: #282828;
+  font-family: "DM Sans", sans-serif;
+}
+
+._q_title_text {
+  font-size: 1.5rem;
+  color: rgb(123, 130, 142);
+  font-size: 1.6rem;
+  font-family: "Instrument Serif", serif;
+  font-style: italic;
+}
+
+._questions {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 2.8rem auto;
+  text-align: left;
+  max-width: 60%;
+}
+
+._questions_div {
+  background-color: #f7f9f9;
+  padding: 1rem 1.5rem;
+  border-radius: 0.6rem;
+  width: 70%;
+  box-shadow: rgba(17, 17, 26, 0.1) 0px 1px 0px;
+}
+
+._questions_div p {
+  color: rgb(123, 130, 142);
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 1rem auto;
+}
+
+._q_div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+._questions_div_none {
+  display: none;
+}
+
+._questions_div_reveal {
+  display: block;
+}
+
+._les_questions_reveal {
+  color: #282828;
+}
+
+._les_questions {
+    color: rgb(123, 130, 142);
+}
+
+._q_icon {
+    color: #282828;
+  cursor: pointer;
+  font-size: 1.5rem;
+}
+
+._questions_icon {
+  width: 6.5rem;
+}
+
+.q_chat_logo {
+  width: 6rem;
+  margin: 1.3rem auto;
+}
+
+@media screen and (max-width: 1042px) {
+  ._questions_div {
+    padding: 1rem 1rem;
+    width: 80%;
+  }
+
+  @media screen and (max-width: 850px) {
+    ._questions {
+      max-width: 99%;
+      margin: 2rem auto;
+    }
+
+    ._trial_text {
+      font-size: 1rem;
+    }
+
+    @media screen and (max-width: 600px) {
+      ._questions_container {
+        margin: 0rem auto;
+      }
+
+      ._questions_div {
+        width: 95%;
+      }
+
+      ._questions_div h4 {
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+      }
+
+      .q_chat_logo {
+        width: 4.2rem;
+      }
+
+      ._questions_container h2 {
+        font-size: 1.8rem;
+      }
+
+      ._q_title_text {
+        font-size: 1.3rem;
+      }
+    }
+  }
+}

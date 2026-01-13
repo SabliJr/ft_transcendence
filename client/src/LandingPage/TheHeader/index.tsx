@@ -4,7 +4,7 @@ import { RiMenuUnfold2Line } from "react-icons/ri";
 import { HiChevronRight, HiChevronDown } from "react-icons/hi";
 import "./Header.css";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const Header = () => {
   const [scrolled, setScrolled] = useState(false);
@@ -17,6 +17,7 @@ const Header = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,17 +69,26 @@ const Header = () => {
 
         <nav className={scrolled ? "_nav_scrolled _nav" : "_nav"}>
           <li>
-            <a href='/' className='_login_text'>
-              Dashboard
+            <a 
+              onClick={() => navigate("/")}
+              className={`_login_text ${location.pathname === "/" ? "_active_tab" : ""}`}
+            >
+              Home
             </a>
           </li>
           <li>
-            <a href='#portfolios' className='_login_text'>
-              Portfolios
+            <a 
+              onClick={() => navigate("/about")} 
+              className={`_login_text ${location.pathname === "/about" ? "_active_tab" : ""}`}
+            >
+              About
             </a>
           </li>
           <li>
-            <a href='#market' className='_login_text'>
+            <a 
+              onClick={() => navigate("/market")} 
+              className={`_login_text ${location.pathname === "/market" ? "_active_tab" : ""}`}
+            >
               Market
             </a>
           </li>

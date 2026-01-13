@@ -11,7 +11,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 
 import type { iErrorMsgs } from "../../Types/GeneralTypes";
 import { useAuth } from "../../Context/AuthProvider";
-import { onAuthWithGoogle, onRegistration } from "../../API/endpoints";
+// import { onAuthWithGoogle, onRegistration } from "../../API/endpoints";
 // import { ContextGlobalVars } from "../../Context/ContextGlobalVars";
 // import { iGlobalValues } from "../../Types/ContextGlobalVars";
 // import EmailUsageNotify from "../GeneralUse/emailUsageNotify";
@@ -56,8 +56,7 @@ const SignUp: React.FC = () => {
   });
 
   const navigate = useNavigate();
-  const { registerValues, setRegisterValues, setVerificationEmail, dispatch } =
-    useAuth();
+  const { registerValues, setRegisterValues, setVerificationEmail } = useAuth(); //dispatch
   // const contextValues = useContext<Partial<iGlobalValues>>(ContextGlobalVars);
   // const { closeNotice, setCloseNotice } = contextValues as iGlobalValues;
 
@@ -85,26 +84,27 @@ const SignUp: React.FC = () => {
 
     try {
       const gVerifyCode = response.code; // Access the ID token directly from the response object
-      const res = await onAuthWithGoogle(gVerifyCode);
+      // const res = await onAuthWithGoogle(gVerifyCode);
+      console.log(gVerifyCode);
 
-      console.log("res: ", res);
-      if (res?.status === 201) {
-        const { accessToken } = res.data;
-        const { user_id } = res.data.user;
+      // console.log("res: ", res);
+      // if (res?.status === 201) {
+      //   const { accessToken } = res.data;
+      //   const { user_id } = res.data.user;
 
-        if (user_id) {
-          console.log("user_id: ", user_id);
-          dispatch({
-            type: "LOGIN",
-            payload: {
-              accessToken,
-              user_id,
-            },
-          });
+      //   if (user_id) {
+      //     console.log("user_id: ", user_id);
+      //     dispatch({
+      //       type: "LOGIN",
+      //       payload: {
+      //         accessToken,
+      //         user_id,
+      //       },
+      //     });
 
-          navigate(`/dashboard/${user_id}`, { replace: true });
-        }
-      }
+      //     navigate(`/dashboard/${user_id}`, { replace: true });
+      //   }
+      // }
     } catch (error: unknown) {
       // Type guard to check if error matches your ApiError interface
       if (error && typeof error === "object" && "response" in error) {
@@ -175,16 +175,16 @@ const SignUp: React.FC = () => {
 
     try {
       setIsLoading(true);
-      const res = await onRegistration(registerValues);
+      // const res = await onRegistration(registerValues);
       setRegisterValues({
         user_name: "",
         email: "",
         password: "",
         customer_id: "",
       });
-      if (res.status === 201) {
-        navigate("/verify", { replace: true });
-      }
+      // if (res?.status === 201) {
+      navigate("/verify", { replace: true });
+      // }
       setVerificationEmail(registerValues.email);
     } catch (err: unknown) {
       // Type guard to check if error matches your ApiError interface

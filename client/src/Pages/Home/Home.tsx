@@ -3,6 +3,7 @@ import Hero from "../../LandingPage/Hero/index";
 import Features from "../../LandingPage/Features/index";
 import AfterHero from "../../LandingPage/Diff/_after_hero";
 import Footer from "../../LandingPage/Footer/index";
+import FAQs from "../../LandingPage/FAQs/index"
 
 const Home = () => {
   return (
@@ -11,6 +12,7 @@ const Home = () => {
       <Hero />
       <AfterHero />
       <Features />
+      <FAQs/>
       <Footer />
     </>
   );
