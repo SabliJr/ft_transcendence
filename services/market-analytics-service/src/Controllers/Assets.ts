@@ -33,6 +33,38 @@ const onGetCoins = async (req: Request, res: Response) => {
  }
 }
 
+const onGetCoin = async (req: Request, res: Response) => {
+  try {
+    const { coin_id } = req.query;
+    
+    if (!coin_id) {
+      return res.status(400).json({ error: "coin_id is required" });
+    }
+
+    const response = await axios.get(
+      `${CMC_API_URL}/cryptocurrency/quotes/latest`,
+      {
+        headers: {
+          "X-CMC_PRO_API_KEY": CMC_API_KEY,
+        },
+        params: {
+          id: coin_id,
+          convert: "USD",
+        },
+      }
+    );
+
+    return res.json(response.data.data);
+  } catch (error: any) {
+    console.error(
+      "CoinMarketCap API error:",
+      error.response?.data || error.message
+    );
+    return res.status(500).json({ error: "Failed to fetch coin" });
+  }
+}
+
 export {
-  onGetCoins
+  onGetCoins,
+  onGetCoin
 }
