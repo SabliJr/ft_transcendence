@@ -1,7 +1,7 @@
 import React, { useState, createContext, useEffect } from "react";
 
 // Types
-import type { iGlobalData } from "../Types/GlobalDataTypes";
+import type { iGlobalData } from "../Types/MarketTypes";
 import type { iCreatorVideo, iChannelsInfo } from "../Types/UserStuffTypes";
 
 // API Endpoints

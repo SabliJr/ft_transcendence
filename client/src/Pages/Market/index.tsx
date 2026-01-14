@@ -10,18 +10,22 @@ import Header from "../../LandingPage/TheHeader/index";
 import Footer from "../../LandingPage/Footer/index";
 
 interface CoinData {
-  id: number;
-  name: string;
+  id: string;
   symbol: string;
-  slug: string;
+  name: string;
+  image: string;
+  current_price: number;
+  market_cap: number;
+  market_cap_rank: number;
+  total_volume: number;
+  price_change_24h: number;
+  price_change_percentage_24h: number;
+  market_cap_change_24h: number;
+  market_cap_change_percentage_24h: number;
+  circulating_supply: number;
   total_supply: number;
-  quote: {
-    USD: {
-      price: number;
-      percent_change_24h: number;
-      market_cap: number;
-    };
-  };
+  max_supply: number;
+  last_updated: string;
 }
 
 const Index = () => {
@@ -76,7 +80,7 @@ const Index = () => {
     return supply.toLocaleString();
   };
 
-  const handleCoinClick = (coinId: number) => {
+  const handleCoinClick = (coinId: string) => {
     navigate(`/market/coin/${coinId}`);
   };
 
@@ -123,33 +127,33 @@ const Index = () => {
                       <td className="product-cell">
                         <div className="product-info">
                           <img
-                            src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
+                            src={coin.image}
                             alt={coin.name}
                             className="coin-icon"
                           />
                           <div>
-                            <div className="coin-symbol">{coin.symbol}</div>
+                            <div className="coin-symbol">{coin.symbol.toUpperCase()}</div>
                             <div className="coin-name">{coin.name}</div>
                           </div>
                         </div>
                       </td>
                       <td className="price-cell">
-                        {formatPrice(coin.quote.USD.price)}
+                        {formatPrice(coin.current_price)}
                       </td>
                       <td className="change-cell">
                         <span
                           className={
-                            coin.quote.USD.percent_change_24h >= 0
+                            coin.price_change_percentage_24h >= 0
                               ? "positive"
                               : "negative"
                           }
                         >
-                          {coin.quote.USD.percent_change_24h >= 0 ? "+" : ""}
-                          {coin.quote.USD.percent_change_24h.toFixed(2)}%
+                          {coin.price_change_percentage_24h >= 0 ? "+" : ""}
+                          {coin.price_change_percentage_24h.toFixed(2)}%
                         </span>
                       </td>
                       <td className="market-cap-cell">
-                        {formatMarketCap(coin.quote.USD.market_cap)}
+                        {formatMarketCap(coin.market_cap)}
                       </td>
                       <td className="supply-cell">
                         {formatSupply(coin.total_supply)}

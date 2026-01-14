@@ -1,5 +1,6 @@
 import axios from "axios";
 import type { loginInfo, iRegistrationInfo } from "../Types/UserStuffTypes";
+import type { iCoinInfo } from "../Types/MarketTypes"
 
 // const SERVER_URL =
 //   import.meta.env?.NODE_ENV === "production"
@@ -97,6 +98,15 @@ const onGetCoin = async (coin_id: string) => {
   });
 };
 
+const onGetCoinChartData = async (getCoinInfo: iCoinInfo) => {
+  return await axios.get(`${AUTH_SERVER}/market/coin/chart_data`, {
+    withCredentials: true,
+    params: getCoinInfo,
+  });
+};
+
+
+
 export {
   onAuthWithGoogle,
   onRefreshToken,
@@ -107,4 +117,5 @@ export {
   onLogin,
   onGetCoins,
   onGetCoin,
+  onGetCoinChartData,
 };

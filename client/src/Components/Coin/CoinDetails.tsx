@@ -1,41 +1,54 @@
 import "./coin.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { onGetCoin } from "../../API/endpoints";
+import { onGetCoin, onGetCoinChartData } from "../../API/endpoints";
 import { BsGlobe, BsTwitter } from "react-icons/bs";
 import { AiOutlineFileText } from "react-icons/ai";
 import { GrLineChart } from "react-icons/gr";
 import { PiStarBold } from "react-icons/pi";
-
+import { FcReddit } from "react-icons/fc";
 
 import Header from "../../LandingPage/TheHeader/index";
 import Footer from "../../LandingPage/Footer/index"
 
 interface CoinDetailsData {
-  id: number;
-  name: string;
+  id: string;
   symbol: string;
-  quote: {
-    USD: {
-      price: number;
-      percent_change_24h: number;
-      market_cap: number;
-      volume_24h: number;
-      volume_change_24h: number;
-    };
+  name: string;
+  image: {
+    thumb: string;
+    small: string;
+    large: string;
   };
-  total_supply: number;
-  circulating_supply: number;
-  max_supply: number | null;
-  fully_diluted_market_cap: number;
+  links: {
+    homepage: string[];
+    whitepaper: string;
+    twitter_screen_name: string;
+    telegram_channel_identifier: string;
+    subreddit_url: string;
+  };
+  market_data: {
+    current_price: { usd: number };
+    price_change_percentage_24h: number;
+    market_cap: { usd: number };
+    total_volume: { usd: number };
+    high_24h: { usd: number };
+    low_24h: { usd: number };
+    circulating_supply: number;
+    total_supply: number;
+    max_supply: number | null;
+    fully_diluted_valuation: { usd: number };
+    market_cap_change_percentage_24h: number;
+  };
+  market_cap_rank: number;
 }
 
 const CoinDetails = () => {
   const { id: coinId } = useParams<{ id: string }>();
-  // const navigate = useNavigate();
   const [coin, setCoin] = useState<CoinDetailsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTimeframe, setSelectedTimeframe] = useState("7D");
+  const [chartData, setChartData] = useState("Price");
 
   useEffect(() => {
     const fetchCoinDetails = async () => {
@@ -43,8 +56,8 @@ const CoinDetails = () => {
 
       try {
         const response = await onGetCoin(coinId);
-        const coinData = response.data[coinId];
-        setCoin(coinData);
+        console.log("Coin data: ", response.data);
+        setCoin(response.data);
       } catch (error) {
         console.error("Failed to fetch coin details:", error);
       } finally {
@@ -54,6 +67,30 @@ const CoinDetails = () => {
 
     fetchCoinDetails();
   }, [coinId]);
+
+  useEffect(() => {
+    const fetchChartData = async () => {
+      if (!coinId) return;
+
+      const getCoinInfo = {
+        coinId: coinId,
+        interval: selectedTimeframe,
+        dataType: chartData,
+      };
+
+      console.log("The historical data we are requesting: ", getCoinInfo)
+
+      try {
+        const response = await onGetCoinChartData(getCoinInfo);
+        console.log("Chart data:", response.data);
+        // Handle chart data here
+      } catch (error) {
+        console.error("Failed to fetch chart data:", error);
+      }
+    };
+
+    fetchChartData();
+  }, [coinId, selectedTimeframe, chartData]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -93,6 +130,14 @@ const CoinDetails = () => {
 
   const timeframes = ["1D", "7D", "1M", "6M", "1Y", "All"];
 
+  const handleTimeframeChange = (timeframe: string) => {
+    setSelectedTimeframe(timeframe);
+  };
+
+  const handleChartTypeChange = (type: string) => {
+    setChartData(type);
+  };
+
   return (
     <>
       <Header />
@@ -102,31 +147,30 @@ const CoinDetails = () => {
             <div className='coin-header'>
               <div className='coin-title'>
                 <img
-                  src={`https://s2.coinmarketcap.com/static/img/coins/64x64/${coin.id}.png`}
+                  src={coin.image.large}
                   alt={coin.name}
                   className='coin-logo'
                 />
                 <div>
                   <h1>
                     {coin.name}{" "}
-                    <span className='coin-ticker'>{coin.symbol}</span>
+                    <span className='coin-ticker'>{coin.symbol.toUpperCase()}</span>
                   </h1>
                   <div className='coin-meta'>
-                    <span>UCID: 825</span>
-                    <span className='coin-id'>1000237 USDT</span>
+                    <span>Rank: #{coin.market_cap_rank}</span>
                   </div>
                 </div>
               </div>
               <div className='coin-price-header'>
-                <h2>{formatPrice(coin.quote.USD.price)}</h2>
+                <h2>{formatPrice(coin.market_data.current_price.usd)}</h2>
                 <span
                   className={
-                    coin.quote.USD.percent_change_24h >= 0
+                    coin.market_data.price_change_percentage_24h >= 0
                       ? "positive"
                       : "negative"
                   }>
-                  {coin.quote.USD.percent_change_24h >= 0 ? "▲" : "▼"}{" "}
-                  {Math.abs(coin.quote.USD.percent_change_24h).toFixed(2)}%
+                  {coin.market_data.price_change_percentage_24h >= 0 ? "▲" : "▼"}{" "}
+                  {Math.abs(coin.market_data.price_change_percentage_24h).toFixed(2)}%
                 </span>
               </div>
             </div>
@@ -134,38 +178,18 @@ const CoinDetails = () => {
             <div className='chart-section'>
               <div className='chart-controls'>
                 <div className='chart-tabs'>
-                  <button className='tab-btn active'>Price</button>
-                  <button className='tab-btn'>Market Cap</button>
-                  {/* <button className='tab-btn'>
-                    <svg width='16' height='16' viewBox='0 0 16 16'>
-                      <path d='M2 2v12h12' stroke='currentColor' fill='none' />
-                    </svg>
-                  </button> */}
-                  {/* <button className='tab-btn'>
-                    <svg width='16' height='16' viewBox='0 0 16 16'>
-                      <rect
-                        width='3'
-                        height='10'
-                        x='2'
-                        y='4'
-                        fill='currentColor'
-                      />
-                      <rect
-                        width='3'
-                        height='14'
-                        x='7'
-                        y='0'
-                        fill='currentColor'
-                      />
-                      <rect
-                        width='3'
-                        height='8'
-                        x='12'
-                        y='6'
-                        fill='currentColor'
-                      />
-                    </svg>
-                  </button> */}
+                  <button
+                    className={`tab-btn ${chartData === "Price" ? "active" : ""}`}
+                    onClick={() => handleChartTypeChange("Price")}
+                  >
+                    Price
+                  </button>
+                  <button
+                    className={`tab-btn ${chartData === "Market Cap" ? "active" : ""}`}
+                    onClick={() => handleChartTypeChange("Market Cap")}
+                  >
+                    Market Cap
+                  </button>
                 </div>
                 <div className='timeframe-buttons'>
                   {timeframes.map((tf) => (
@@ -174,7 +198,7 @@ const CoinDetails = () => {
                       className={`timeframe-btn ${
                         selectedTimeframe === tf ? "active" : ""
                       }`}
-                      onClick={() => setSelectedTimeframe(tf)}>
+                      onClick={() => handleTimeframeChange(tf)}>
                       {tf}
                     </button>
                   ))}
@@ -219,8 +243,8 @@ const CoinDetails = () => {
                       />
                       Binance
                     </td>
-                    <td>BTC/{coin.symbol}</td>
-                    <td>{formatPrice(coin.quote.USD.price)}</td>
+                    <td>BTC/{coin.symbol.toUpperCase()}</td>
+                    <td>{formatPrice(coin.market_data.current_price.usd)}</td>
                     <td>$15,956,846</td>
                     <td>$17,291,960</td>
                     <td>$750,025,552</td>
@@ -245,11 +269,17 @@ const CoinDetails = () => {
               <div className='range-section'>
                 <h4>24h range</h4>
                 <div className='range-bar'>
-                  <div className='range-fill'></div>
+                  <div 
+                    className='range-fill'
+                    style={{
+                      width: `${((coin.market_data.current_price.usd - coin.market_data.low_24h.usd) / 
+                        (coin.market_data.high_24h.usd - coin.market_data.low_24h.usd)) * 100}%`
+                    }}
+                  ></div>
                 </div>
                 <div className='range-values'>
-                  <span>$0.9969</span>
-                  <span>$1.00</span>
+                  <span>{formatPrice(coin.market_data.low_24h.usd)}</span>
+                  <span>{formatPrice(coin.market_data.high_24h.usd)}</span>
                 </div>
               </div>
 
@@ -259,8 +289,10 @@ const CoinDetails = () => {
                     Market cap <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    <span className='positive'>▲ 0.01%</span>{" "}
-                    {formatLargeNumber(coin.quote.USD.market_cap)}
+                    <span className={coin.market_data.market_cap_change_percentage_24h >= 0 ? 'positive' : 'negative'}>
+                      {coin.market_data.market_cap_change_percentage_24h >= 0 ? '▲' : '▼'} {Math.abs(coin.market_data.market_cap_change_percentage_24h).toFixed(2)}%
+                    </span>{" "}
+                    {formatLargeNumber(coin.market_data.market_cap.usd)}
                   </span>
                 </div>
 
@@ -269,8 +301,7 @@ const CoinDetails = () => {
                     Volume (24h) <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    <span className='positive'>▲ 24.88%</span>{" "}
-                    {formatLargeNumber(coin.quote.USD.volume_24h)}
+                    {formatLargeNumber(coin.market_data.total_volume.usd)}
                   </span>
                 </div>
 
@@ -280,7 +311,7 @@ const CoinDetails = () => {
                   </span>
                   <span className='stat-value'>
                     {(
-                      (coin.quote.USD.volume_24h / coin.quote.USD.market_cap) *
+                      (coin.market_data.total_volume.usd / coin.market_data.market_cap.usd) *
                       100
                     ).toFixed(2)}
                     %
@@ -292,7 +323,7 @@ const CoinDetails = () => {
                     Circulating supply <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {formatSupply(coin.circulating_supply)} {coin.symbol}
+                    {formatSupply(coin.market_data.circulating_supply)} {coin.symbol.toUpperCase()}
                   </span>
                 </div>
 
@@ -301,7 +332,7 @@ const CoinDetails = () => {
                     Total supply <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {formatSupply(coin.total_supply)} {coin.symbol}
+                    {formatSupply(coin.market_data.total_supply)} {coin.symbol.toUpperCase()}
                   </span>
                 </div>
 
@@ -310,7 +341,16 @@ const CoinDetails = () => {
                     Max supply <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {coin.max_supply ? formatSupply(coin.max_supply) : "∞"}
+                    {coin.market_data.max_supply ? formatSupply(coin.market_data.max_supply) : "∞"}
+                  </span>
+                </div>
+
+                <div className='stat-item'>
+                  <span className='stat-label'>
+                    Fully diluted valuation <span className='info-icon'>ⓘ</span>
+                  </span>
+                  <span className='stat-value'>
+                    {formatLargeNumber(coin.market_data.fully_diluted_valuation.usd)}
                   </span>
                 </div>
               </div>
@@ -318,22 +358,33 @@ const CoinDetails = () => {
               <div className='official-links'>
                 <h4>Official links</h4>
                 <div className='links-buttons'>
-                  <button className='link-btn'>
-                    <BsGlobe /> Website
-                  </button>
-                  <button className='link-btn'>
-                    <AiOutlineFileText /> Whitepaper
-                  </button>
-                  <button className='link-btn'>
-                    <BsTwitter /> Twitter
-                  </button>
+                  {coin.links.homepage[0] && (
+                    <a href={coin.links.homepage[0]} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                      <BsGlobe /> Website
+                    </a>
+                  )}
+                  {coin.links.whitepaper && (
+                    <a href={coin.links.whitepaper} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                      <AiOutlineFileText /> Whitepaper
+                    </a>
+                  )}
+                  {coin.links.twitter_screen_name && (
+                    <a href={`https://twitter.com/${coin.links.twitter_screen_name}`} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                      <BsTwitter /> Twitter
+                    </a>
+                  )}
+                  {coin.links.twitter_screen_name && (
+                    <a href={`${coin.links.subreddit_url}`} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                      <FcReddit /> Subreddit
+                    </a>
+                  )}
                 </div>
               </div>
 
               <div className='converter-section'>
                 <h4>Converter</h4>
                 <div className='converter-input'>
-                  <input type='text' value={coin.symbol} readOnly />
+                  <input type='text' value={coin.symbol.toUpperCase()} readOnly />
                   <span>⇅</span>
                 </div>
                 <div className='converter-input'>
