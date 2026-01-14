@@ -9,7 +9,8 @@ import { PiStarBold } from "react-icons/pi";
 import { FcReddit } from "react-icons/fc";
 
 import Header from "../../LandingPage/TheHeader/index";
-import Footer from "../../LandingPage/Footer/index"
+import Footer from "../../LandingPage/Footer/index";
+import CoinChart from "../CoinChart";
 
 interface CoinDetailsData {
   id: string;
@@ -27,6 +28,9 @@ interface CoinDetailsData {
     telegram_channel_identifier: string;
     subreddit_url: string;
   };
+  description: {
+    en: string;
+  };
   market_data: {
     current_price: { usd: number };
     price_change_percentage_24h: number;
@@ -43,12 +47,23 @@ interface CoinDetailsData {
   market_cap_rank: number;
 }
 
+interface ChartDataPoint {
+  timestamp: number;
+  value: number;
+}
+
 const CoinDetails = () => {
   const { id: coinId } = useParams<{ id: string }>();
   const [coin, setCoin] = useState<CoinDetailsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTimeframe, setSelectedTimeframe] = useState("7D");
-  const [chartData, setChartData] = useState("Price");
+  const [chartType, setChartType] = useState("Price");
+  const [chartDataPoints, setChartDataPoints] = useState<ChartDataPoint[]>([]);
+  const [chartLoading, setChartLoading] = useState(false);
+  const [isChartFullscreen, setIsChartFullscreen] = useState(false);
+  const [coinAmount, setCoinAmount] = useState<string>("1");
+  const [usdAmount, setUsdAmount] = useState<string>("");
+  const [isUsdFirst, setIsUsdFirst] = useState(false);
 
   useEffect(() => {
     const fetchCoinDetails = async () => {
@@ -72,10 +87,11 @@ const CoinDetails = () => {
     const fetchChartData = async () => {
       if (!coinId) return;
 
+      setChartLoading(true);
       const getCoinInfo = {
         coinId: coinId,
         interval: selectedTimeframe,
-        dataType: chartData,
+        dataType: chartType,
       };
 
       console.log("The historical data we are requesting: ", getCoinInfo)
@@ -83,14 +99,29 @@ const CoinDetails = () => {
       try {
         const response = await onGetCoinChartData(getCoinInfo);
         console.log("Chart data:", response.data);
-        // Handle chart data here
+        setChartDataPoints(response.data.chartData || []);
       } catch (error) {
         console.error("Failed to fetch chart data:", error);
+      } finally {
+        setChartLoading(false);
       }
     };
 
     fetchChartData();
-  }, [coinId, selectedTimeframe, chartData]);
+  }, [coinId, selectedTimeframe, chartType]);
+
+  // Update USD amount when coin data loads or coin amount changes
+  useEffect(() => {
+    if (coin && coinAmount && !isUsdFirst) {
+      const numericCoinAmount = parseFloat(coinAmount) || 0;
+      const converted = numericCoinAmount * coin.market_data.current_price.usd;
+      setUsdAmount(converted.toFixed(2));
+    }
+  }, [coin]);
+
+  const handleToggleFullscreen = () => {
+    setIsChartFullscreen(!isChartFullscreen);
+  };
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -120,6 +151,38 @@ const CoinDetails = () => {
     return supply.toLocaleString();
   };
 
+  const handleCoinAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setCoinAmount(value);
+      if (coin && value) {
+        const numericValue = parseFloat(value) || 0;
+        const converted = numericValue * coin.market_data.current_price.usd;
+        setUsdAmount(converted.toFixed(2));
+      } else {
+        setUsdAmount("");
+      }
+    }
+  };
+
+  const handleUsdAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value === "" || /^\d*\.?\d*$/.test(value)) {
+      setUsdAmount(value);
+      if (coin && value) {
+        const numericValue = parseFloat(value) || 0;
+        const converted = numericValue / coin.market_data.current_price.usd;
+        setCoinAmount(converted.toFixed(6));
+      } else {
+        setCoinAmount("");
+      }
+    }
+  };
+
+  const handleSwapAmounts = () => {
+    setIsUsdFirst(!isUsdFirst);
+  };
+
   if (loading) {
     return <div className="loading">Loading...</div>;
   }
@@ -128,14 +191,14 @@ const CoinDetails = () => {
     return <div className="error">Coin not found</div>;
   }
 
-  const timeframes = ["1D", "7D", "1M", "6M", "1Y", "All"];
+  const timeframes = ["1D", "7D", "1M", "6M", "1Y"];
 
   const handleTimeframeChange = (timeframe: string) => {
     setSelectedTimeframe(timeframe);
   };
 
   const handleChartTypeChange = (type: string) => {
-    setChartData(type);
+    setChartType(type);
   };
 
   return (
@@ -179,13 +242,13 @@ const CoinDetails = () => {
               <div className='chart-controls'>
                 <div className='chart-tabs'>
                   <button
-                    className={`tab-btn ${chartData === "Price" ? "active" : ""}`}
+                    className={`tab-btn ${chartType === "Price" ? "active" : ""}`}
                     onClick={() => handleChartTypeChange("Price")}
                   >
                     Price
                   </button>
                   <button
-                    className={`tab-btn ${chartData === "Market Cap" ? "active" : ""}`}
+                    className={`tab-btn ${chartType === "Market Cap" ? "active" : ""}`}
                     onClick={() => handleChartTypeChange("Market Cap")}
                   >
                     Market Cap
@@ -202,55 +265,24 @@ const CoinDetails = () => {
                       {tf}
                     </button>
                   ))}
-                  <button className='expand-btn'>⛶</button>
+                  <button className='expand-btn' onClick={handleToggleFullscreen}>⛶</button>
                 </div>
               </div>
-              <div className='chart-placeholder'>
-                <div className='chart-line'></div>
-              </div>
+              <CoinChart 
+                data={chartDataPoints} 
+                loading={chartLoading} 
+                timeframe={selectedTimeframe}
+                isFullscreen={isChartFullscreen}
+                onToggleFullscreen={handleToggleFullscreen}
+              />
             </div>
 
-            <div className='markets-section'>
-              <div className='markets-header'>
-                <h3>{coin.name} Markets</h3>
-                <div className='markets-filters'>
-                  <button className='filter-btn-small active'>ALL</button>
-                  <button className='filter-btn-small'>CEX</button>
-                  <button className='filter-btn-small'>DEX</button>
-                  <button className='filter-btn-small'>All pairs ▼</button>
-                </div>
-              </div>
-              <table className='markets-table'>
-                <thead>
-                  <tr>
-                    <th>#</th>
-                    <th>Pair</th>
-                    <th>Exchange</th>
-                    <th>Price</th>
-                    <th>+2 Depth</th>
-                    <th>-2 Depth</th>
-                    <th>Volume (24H)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td className='pair-cell'>
-                      <img
-                        src={`https://s2.coinmarketcap.com/static/img/exchanges/64x64/270.png`}
-                        alt='Binance'
-                        className='exchange-icon'
-                      />
-                      Binance
-                    </td>
-                    <td>BTC/{coin.symbol.toUpperCase()}</td>
-                    <td>{formatPrice(coin.market_data.current_price.usd)}</td>
-                    <td>$15,956,846</td>
-                    <td>$17,291,960</td>
-                    <td>$750,025,552</td>
-                  </tr>
-                </tbody>
-              </table>
+            <div className='description-section'>
+              <h3>About {coin.name}</h3>
+              <div 
+                className='description-content'
+                dangerouslySetInnerHTML={{ __html: coin.description?.en || 'No description available.' }}
+              />
             </div>
           </div>
 
@@ -373,7 +405,7 @@ const CoinDetails = () => {
                       <BsTwitter /> Twitter
                     </a>
                   )}
-                  {coin.links.twitter_screen_name && (
+                  {coin.links.subreddit_url && (
                     <a href={`${coin.links.subreddit_url}`} target="_blank" rel="noopener noreferrer" className='link-btn'>
                       <FcReddit /> Subreddit
                     </a>
@@ -383,13 +415,57 @@ const CoinDetails = () => {
 
               <div className='converter-section'>
                 <h4>Converter</h4>
-                <div className='converter-input'>
-                  <input type='text' value={coin.symbol.toUpperCase()} readOnly />
-                  <span>⇅</span>
-                </div>
-                <div className='converter-input'>
-                  <input type='text' value='USD' readOnly />
-                </div>
+                {isUsdFirst ? (
+                  <>
+                    <div className='converter-input'>
+                      <input 
+                        type='text' 
+                        value={usdAmount}
+                        onChange={handleUsdAmountChange}
+                        placeholder="0"
+                      />
+                      <span className='currency-label'>USD</span>
+                    </div>
+                    <button className='swap-btn' onClick={handleSwapAmounts}>⇅</button>
+                    <div className='converter-input'>
+                      <input 
+                        type='text' 
+                        value={coinAmount}
+                        onChange={handleCoinAmountChange}
+                        placeholder="0"
+                      />
+                      <span className='currency-label'>{coin.symbol.toUpperCase()}</span>
+                    </div>
+                    <div className='converter-rate'>
+                      $1 USD = {(1 / coin.market_data.current_price.usd).toFixed(6)} {coin.symbol.toUpperCase()}
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <div className='converter-input'>
+                      <input 
+                        type='text' 
+                        value={coinAmount}
+                        onChange={handleCoinAmountChange}
+                        placeholder="0"
+                      />
+                      <span className='currency-label'>{coin.symbol.toUpperCase()}</span>
+                    </div>
+                    <button className='swap-btn' onClick={handleSwapAmounts}>⇅</button>
+                    <div className='converter-input'>
+                      <input 
+                        type='text' 
+                        value={usdAmount}
+                        onChange={handleUsdAmountChange}
+                        placeholder="0"
+                      />
+                      <span className='currency-label'>USD</span>
+                    </div>
+                    <div className='converter-rate'>
+                      1 {coin.symbol.toUpperCase()} = {formatPrice(coin.market_data.current_price.usd)}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </div>
