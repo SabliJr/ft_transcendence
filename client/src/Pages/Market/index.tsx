@@ -1,6 +1,7 @@
 import "./market.css";
 import { useEffect, useState } from "react";
 import { onGetCoins } from "../../API/endpoints";
+import { useNavigate } from "react-router-dom";
 
 import { RiFilter2Line } from "react-icons/ri";
 import { BsSearch } from "react-icons/bs";
@@ -27,6 +28,7 @@ const Index = () => {
   const [coins, setCoins] = useState<CoinData[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCoins = async () => {
@@ -74,6 +76,10 @@ const Index = () => {
     return supply.toLocaleString();
   };
 
+  const handleCoinClick = (coinId: number) => {
+    navigate(`/market/coin/${coinId}`);
+  };
+
   return (
     <main>
       <Header />
@@ -109,7 +115,11 @@ const Index = () => {
                 </thead>
                 <tbody>
                   {coins.map((coin) => (
-                    <tr key={coin.id}>
+                    <tr
+                      key={coin.id}
+                      onClick={() => handleCoinClick(coin.id)}
+                      style={{ cursor: "pointer" }}
+                    >
                       <td className="product-cell">
                         <div className="product-info">
                           <img

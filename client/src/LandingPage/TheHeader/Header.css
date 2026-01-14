@@ -27,8 +27,7 @@
 
 ._btns_container {
   display: flex;
-  gap: 0.5rem;
-  border: 0.8px solid #282828;
+  gap: 0.7rem;
   padding: 0.2rem;
   border-radius: 1rem;
   cursor: pointer;

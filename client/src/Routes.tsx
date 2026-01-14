@@ -9,7 +9,7 @@ import TermsOfService from "./Pages/Legal/TermsOfService";
 import Signup from "./Pages/Auth/signup";
 import Login from "./Pages/Auth/Login";
 // import SuccessPage from "./src/utils/channelConnectSuccess";
-// import ProtectedRoute from "./utils/protect_routes";
+import CoinDetails from "./Components/Coin/CoinDetails";
 import About from "./Pages/About/index";
 import Market from "./Pages/Market/index";
 
@@ -26,7 +26,7 @@ const RoutesFile = () => {
         <Route path='/login' element={<Login />} />
         <Route path='/about' element={<About />} />
         <Route path='/*' element={<NotFound />} />
-        {/* <Route path='/waitlist' element={<WaitList />} /> */}
+        <Route path='/market/coin/:id' element={<CoinDetails />} />
         {/* <Route path='/dashboard' element={<Dashboard />} /> */}
 
         {/* <Route element={<ProtectedRoute />}> */}
