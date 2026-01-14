@@ -30,8 +30,11 @@ interface CoinData {
 
 const Index = () => {
   const [coins, setCoins] = useState<CoinData[]>([]);
+  const [filteredCoins, setFilteredCoins] = useState<CoinData[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -40,6 +43,7 @@ const Index = () => {
         const data = await onGetCoins();
         console.log("d:", data.data);
         setCoins(data.data);
+        setFilteredCoins(data.data);
       } catch (error) {
         console.error("Failed to fetch coins:", error);
       } finally {
@@ -49,6 +53,17 @@ const Index = () => {
 
     fetchCoins();
   }, []);
+
+  useEffect(() => {
+    const lowercasedQuery = searchQuery.toLowerCase();
+    const filtered = coins.filter((coin) => {
+      return (
+        coin.name.toLowerCase().includes(lowercasedQuery) ||
+        coin.symbol.toLowerCase().includes(lowercasedQuery)
+      );
+    });
+    setFilteredCoins(filtered);
+  }, [searchQuery, coins]);
 
   console.log(coins);
 
@@ -84,6 +99,22 @@ const Index = () => {
     navigate(`/market/coin/${coinId}`);
   };
 
+  const applyFilter = (filter: string) => {
+    let sortedCoins = [...filteredCoins];
+    if (filter === "top-gainers") {
+      sortedCoins.sort(
+        (a, b) =>
+          b.price_change_percentage_24h - a.price_change_percentage_24h
+      );
+    } else if (filter === "highest-market-cap") {
+      sortedCoins.sort((a, b) => b.market_cap - a.market_cap);
+    } else if (filter === "highest-volume") {
+      sortedCoins.sort((a, b) => b.total_volume - a.total_volume);
+    }
+    setFilteredCoins(sortedCoins);
+    setIsFilterOpen(false);
+  };
+
   return (
     <main>
       <Header />
@@ -93,12 +124,37 @@ const Index = () => {
           <div className="market-controls">
             <div className="search-bar">
               <BsSearch className="search-icon" />
-              <input type="text" placeholder="Search assets..." />
+              <input
+                type="text"
+                placeholder="Search assets..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
             </div>
-            <button className="filter-btn">
-              <RiFilter2Line />
-              Filter
-            </button>
+            <div className="filter-wrapper">
+              <button
+                className="filter-btn"
+                onClick={() => setIsFilterOpen(!isFilterOpen)}
+              >
+                <RiFilter2Line />
+                Filter
+              </button>
+              {isFilterOpen && (
+                <div className="filter-dropdown">
+                  <ul>
+                    <li onClick={() => applyFilter("top-gainers")}>
+                      Top Gainers
+                    </li>
+                    <li onClick={() => applyFilter("highest-market-cap")}>
+                      Highest Market Cap
+                    </li>
+                    <li onClick={() => applyFilter("highest-volume")}>
+                      Highest Volume
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {loading ? (
@@ -118,7 +174,7 @@ const Index = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {coins.map((coin) => (
+                  {filteredCoins.map((coin) => (
                     <tr
                       key={coin.id}
                       onClick={() => handleCoinClick(coin.id)}

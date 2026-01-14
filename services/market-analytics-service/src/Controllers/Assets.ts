@@ -11,9 +11,8 @@ const cgAxios = axios.create({
 
 // Getting the coins list (CoinGecko)
 const onGetCoins = async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit) || 50;
+  const limit = Number(req.query.limit) || 30;
 
-  console.log("CG API KEY: ", CG_API_KEY);
   try {
     const response = await cgAxios.get("/coins/markets", {
       params: {
@@ -41,7 +40,6 @@ const onGetCoins = async (req: Request, res: Response) => {
 const onGetCoin = async (req: Request, res: Response) => {
   try {
     const { coin_id } = req.query;
-    console.log("CG API KEY: ", CG_API_KEY);
 
     if (!coin_id) {
       return res.status(400).json({ error: "coin_id is required" });
