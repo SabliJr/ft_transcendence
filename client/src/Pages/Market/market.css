@@ -77,6 +77,13 @@
   border-color: #6c757d;
 }
 
+.filter-btn.active {
+  background-color: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+  text-transform: capitalize;
+}
+
 .filter-btn svg {
   font-size: 16px;
 }
@@ -112,11 +119,44 @@
   background-color: #f8f9fa;
 }
 
+.filter-dropdown li.active {
+  background-color: #f0f0f0;
+  font-weight: 600;
+}
+
+.clear-btn {
+  padding: 10px 16px;
+  border: 1px solid #ea3943;
+  border-radius: 8px;
+  background: white;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ea3943;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.clear-btn:hover {
+  background-color: #ea3943;
+  color: white;
+}
+
 .loading {
   text-align: center;
   padding: 40px;
   font-size: 18px;
   color: #666;
+}
+
+.results-info {
+  font-size: 14px;
+  color: #6c757d;
+  margin-bottom: 16px;
+}
+
+.results-info span {
+  font-weight: 500;
+  color: #1a1a1a;
 }
 
 .table-wrapper {
@@ -145,6 +185,21 @@
   font-size: 13px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+}
+
+.market-table th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s;
+}
+
+.market-table th.sortable:hover {
+  background-color: #e9ecef;
+}
+
+.market-table th.sortable svg {
+  margin-left: 4px;
+  vertical-align: middle;
 }
 
 .market-table tbody tr {

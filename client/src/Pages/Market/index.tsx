@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 import { RiFilter2Line } from "react-icons/ri";
 import { BsSearch } from "react-icons/bs";
+import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 
 import Header from "../../LandingPage/TheHeader/index";
 import Footer from "../../LandingPage/Footer/index";
@@ -30,6 +31,9 @@ interface CoinData {
   low_24h: number;
 }
 
+type SortField = 'name' | 'current_price' | 'price_change_percentage_24h' | 'market_cap' | 'total_supply' | null;
+type SortDirection = 'asc' | 'desc';
+
 const Index = () => {
   const [coins, setCoins] = useState<CoinData[]>([]);
   const [filteredCoins, setFilteredCoins] = useState<CoinData[]>([]);
@@ -37,6 +41,9 @@ const Index = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [sortField, setSortField] = useState<SortField>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
+  const [activeFilter, setActiveFilter] = useState<string | null>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,17 +65,36 @@ const Index = () => {
   }, [currentPage]);
 
   useEffect(() => {
-    const lowercasedQuery = searchQuery.toLowerCase();
-    const filtered = coins.filter((coin) => {
+    let filtered = coins.filter((coin) => {
+      const lowercasedQuery = searchQuery.toLowerCase();
       return (
         coin.name.toLowerCase().includes(lowercasedQuery) ||
         coin.symbol.toLowerCase().includes(lowercasedQuery)
       );
     });
-    setFilteredCoins(filtered);
-  }, [searchQuery, coins]);
 
-  console.log(coins);
+    // Apply sorting
+    if (sortField) {
+      filtered = [...filtered].sort((a, b) => {
+        let aVal = a[sortField];
+        let bVal = b[sortField];
+        
+        if (typeof aVal === 'string') {
+          aVal = aVal.toLowerCase();
+          bVal = (bVal as string).toLowerCase();
+          return sortDirection === 'asc' 
+            ? (aVal as string).localeCompare(bVal as string)
+            : (bVal as string).localeCompare(aVal as string);
+        }
+        
+        return sortDirection === 'asc' 
+          ? (aVal as number) - (bVal as number)
+          : (bVal as number) - (aVal as number);
+      });
+    }
+
+    setFilteredCoins(filtered);
+  }, [searchQuery, coins, sortField, sortDirection]);
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -102,20 +128,42 @@ const Index = () => {
     navigate(`/market/coin/${coinId}`);
   };
 
-  const applyFilter = (filter: string) => {
-    const sortedCoins = [...filteredCoins];
-    if (filter === "top-gainers") {
-      sortedCoins.sort(
-        (a, b) =>
-          b.price_change_percentage_24h - a.price_change_percentage_24h
-      );
-    } else if (filter === "highest-market-cap") {
-      sortedCoins.sort((a, b) => b.market_cap - a.market_cap);
-    } else if (filter === "highest-volume") {
-      sortedCoins.sort((a, b) => b.total_volume - a.total_volume);
+  const handleSort = (field: SortField) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('desc');
     }
-    setFilteredCoins(sortedCoins);
+    setActiveFilter(null);
+  };
+
+  const applyFilter = (filter: string) => {
+    if (filter === "top-gainers") {
+      setSortField('price_change_percentage_24h');
+      setSortDirection('desc');
+    } else if (filter === "highest-market-cap") {
+      setSortField('market_cap');
+      setSortDirection('desc');
+    } else if (filter === "highest-volume") {
+      setSortField('total_supply');
+      setSortDirection('desc');
+    }
+    setActiveFilter(filter);
     setIsFilterOpen(false);
+  };
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSortField(null);
+    setSortDirection('desc');
+    setActiveFilter(null);
+    setFilteredCoins(coins);
+  };
+
+  const renderSortIcon = (field: SortField) => {
+    if (sortField !== field) return null;
+    return sortDirection === 'asc' ? <TiArrowSortedUp /> : <TiArrowSortedDown />;
   };
 
   const getPaginationGroup = () => {
@@ -151,7 +199,7 @@ const Index = () => {
     const height = 40;
     const padding = 4;
     
-    // Create simple 3-point line: low -> current -> simulated mid-point
+    // This simple 3-point line: low -> current -> simulated mid-point
     // Since we only have low, high, current, we'll create a simple visualization
     const low = coin.low_24h;
     const high = coin.high_24h;
@@ -164,7 +212,7 @@ const Index = () => {
       return height - padding - (normalized * (height - padding * 2));
     };
     
-    // Create a simple 5-point path to simulate price movement
+    // Making a simple 5-point path to simulate price movement
     const points = [
       { x: 0, y: getY(low + range * 0.3) },
       { x: width * 0.25, y: getY(low + range * 0.1) },
@@ -227,30 +275,51 @@ const Index = () => {
             </div>
             <div className="filter-wrapper">
               <button
-                className="filter-btn"
+                className={`filter-btn ${activeFilter ? 'active' : ''}`}
                 onClick={() => setIsFilterOpen(!isFilterOpen)}
               >
                 <RiFilter2Line />
-                Filter
+                {activeFilter ? activeFilter.replace('-', ' ') : 'Filter'}
               </button>
               {isFilterOpen && (
                 <div className="filter-dropdown">
                   <ul>
-                    <li onClick={() => applyFilter("top-gainers")}>
+                    <li 
+                      onClick={() => applyFilter("top-gainers")}
+                      className={activeFilter === 'top-gainers' ? 'active' : ''}
+                    >
                       Top Gainers
                     </li>
-                    <li onClick={() => applyFilter("highest-market-cap")}>
+                    <li 
+                      onClick={() => applyFilter("highest-market-cap")}
+                      className={activeFilter === 'highest-market-cap' ? 'active' : ''}
+                    >
                       Highest Market Cap
                     </li>
-                    <li onClick={() => applyFilter("highest-volume")}>
+                    <li 
+                      onClick={() => applyFilter("highest-volume")}
+                      className={activeFilter === 'highest-volume' ? 'active' : ''}
+                    >
                       Highest Volume
                     </li>
                   </ul>
                 </div>
               )}
             </div>
+            {(searchQuery || sortField || activeFilter) && (
+              <button className="clear-btn" onClick={clearFilters}>
+                Clear
+              </button>
+            )}
           </div>
         </div>
+        
+        {/* Results count */}
+        <div className="results-info">
+          Showing {filteredCoins.length} of {coins.length} assets
+          {searchQuery && <span> matching "{searchQuery}"</span>}
+        </div>
+
         {loading ? (
           <div className="loading">Loading...</div>
         ) : (
@@ -259,12 +328,22 @@ const Index = () => {
               <table className="market-table">
                 <thead>
                   <tr>
-                    <th>Asset</th>
-                    <th>Price</th>
-                    <th>24h Change</th>
-                    <th>Market Cap</th>
-                    <th>Total Supply</th>
-                    <th>Markets</th>
+                    <th className="sortable" onClick={() => handleSort('name')}>
+                      Asset {renderSortIcon('name')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('current_price')}>
+                      Price {renderSortIcon('current_price')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('price_change_percentage_24h')}>
+                      24h Change {renderSortIcon('price_change_percentage_24h')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('market_cap')}>
+                      Market Cap {renderSortIcon('market_cap')}
+                    </th>
+                    <th className="sortable" onClick={() => handleSort('total_supply')}>
+                      Total Supply {renderSortIcon('total_supply')}
+                    </th>
+                    <th>24h Range</th>
                   </tr>
                 </thead>
                 <tbody>
