@@ -26,6 +26,8 @@ interface CoinData {
   total_supply: number;
   max_supply: number;
   last_updated: string;
+  high_24h: number;
+  low_24h: number;
 }
 
 const Index = () => {
@@ -40,7 +42,8 @@ const Index = () => {
   useEffect(() => {
     const fetchCoins = async () => {
       try {
-        const data = await onGetCoins();
+        setLoading(true);
+        const data = await onGetCoins(currentPage);
         console.log("d:", data.data);
         setCoins(data.data);
         setFilteredCoins(data.data);
@@ -52,7 +55,7 @@ const Index = () => {
     };
 
     fetchCoins();
-  }, []);
+  }, [currentPage]);
 
   useEffect(() => {
     const lowercasedQuery = searchQuery.toLowerCase();
@@ -100,7 +103,7 @@ const Index = () => {
   };
 
   const applyFilter = (filter: string) => {
-    let sortedCoins = [...filteredCoins];
+    const sortedCoins = [...filteredCoins];
     if (filter === "top-gainers") {
       sortedCoins.sort(
         (a, b) =>
@@ -113,6 +116,97 @@ const Index = () => {
     }
     setFilteredCoins(sortedCoins);
     setIsFilterOpen(false);
+  };
+
+  const getPaginationGroup = () => {
+    const totalPages = 10;
+    const visiblePages = 5;
+    
+    let startPage: number;
+    let endPage: number;
+    
+    if (currentPage <= 3) {
+      // At the beginning, show pages 1-5
+      startPage = 1;
+      endPage = visiblePages;
+    } else if (currentPage >= totalPages - 2) {
+      // At the end, show pages 6-10
+      startPage = totalPages - visiblePages + 1;
+      endPage = totalPages;
+    } else {
+      // In the middle, center the current page
+      startPage = currentPage - 2;
+      endPage = currentPage + 2;
+    }
+
+    const pages = [];
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
+    return { pages, startPage, endPage, totalPages };
+  };
+
+  const renderMiniRangeChart = (coin: CoinData) => {
+    const width = 120;
+    const height = 40;
+    const padding = 4;
+    
+    // Create simple 3-point line: low -> current -> simulated mid-point
+    // Since we only have low, high, current, we'll create a simple visualization
+    const low = coin.low_24h;
+    const high = coin.high_24h;
+    const current = coin.current_price;
+    const range = high - low || 1;
+    
+    // Normalize values to chart coordinates
+    const getY = (value: number) => {
+      const normalized = (value - low) / range;
+      return height - padding - (normalized * (height - padding * 2));
+    };
+    
+    // Create a simple 5-point path to simulate price movement
+    const points = [
+      { x: 0, y: getY(low + range * 0.3) },
+      { x: width * 0.25, y: getY(low + range * 0.1) },
+      { x: width * 0.5, y: getY(low + range * 0.6) },
+      { x: width * 0.75, y: getY(low + range * 0.4) },
+      { x: width, y: getY(current) },
+    ];
+    
+    const linePath = points
+      .map((point, index) => `${index === 0 ? 'M' : 'L'} ${point.x} ${point.y}`)
+      .join(' ');
+    
+    const areaPath = `${linePath} L ${width} ${height - padding} L 0 ${height - padding} Z`;
+    
+    // Determine color based on whether current is above or below the midpoint
+    const isPositive = current >= low + range * 0.5;
+    const strokeColor = isPositive ? '#16c784' : '#ea3943';
+    const gradientId = `mini-gradient-${coin.id}`;
+    
+    return (
+      <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="mini-line-chart">
+        <defs>
+          <linearGradient id={gradientId} x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor={strokeColor} stopOpacity="0.3" />
+            <stop offset="100%" stopColor={strokeColor} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        
+        {/* Area fill */}
+        <path d={areaPath} fill={`url(#${gradientId})`} />
+        
+        {/* Line */}
+        <path
+          d={linePath}
+          fill="none"
+          stroke={strokeColor}
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
   };
 
   return (
@@ -215,7 +309,7 @@ const Index = () => {
                         {formatSupply(coin.total_supply)}
                       </td>
                       <td className="markets-cell">
-                        <div className="sparkline"></div>
+                        {renderMiniRangeChart(coin)}
                       </td>
                     </tr>
                   ))}
@@ -223,42 +317,38 @@ const Index = () => {
               </table>
             </div>
             <div className="pagination">
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
-              >
-                1
-              </button>
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(2)}
-                disabled={currentPage === 2}
-              >
-                2
-              </button>
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(3)}
-                disabled={currentPage === 3}
-              >
-                3
-              </button>
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(4)}
-                disabled={currentPage === 4}
-              >
-                4
-              </button>
-              <button
-                className="page-btn"
-                onClick={() => setCurrentPage(5)}
-                disabled={currentPage === 5}
-              >
-                5
-              </button>
-              <span className="page-dots">...</span>
+              {(() => {
+                const { pages, startPage, endPage, totalPages } = getPaginationGroup();
+                return (
+                  <>
+                    {startPage > 1 && (
+                      <span 
+                        className="page-dots" 
+                        onClick={() => setCurrentPage(Math.max(1, currentPage - 5))}
+                      >
+                        ...
+                      </span>
+                    )}
+                    {pages.map((item) => (
+                      <button
+                        key={item}
+                        onClick={() => setCurrentPage(item)}
+                        className={`page-btn ${currentPage === item ? "active" : ""}`}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                    {endPage < totalPages && (
+                      <span 
+                        className="page-dots" 
+                        onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 5))}
+                      >
+                        ...
+                      </span>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           </>
         )}

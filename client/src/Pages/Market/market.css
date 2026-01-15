@@ -252,11 +252,71 @@
   cursor: default;
 }
 
+.page-btn.active {
+  background: #1a1a1a;
+  color: white;
+  border-color: #1a1a1a;
+}
+
 .page-dots {
-  padding: 0 8px;
+  cursor: pointer;
+  padding: 6px 12px;
   color: #6c757d;
-  font-weight: 500;
-  font-size: 16px;
+  user-select: none;
+}
+
+.page-dots:hover {
+  color: #1a1a1a;
+}
+
+.price-range-container {
+  width: 120px;
+}
+
+.price-range-bar {
+  height: 6px;
+  background: #e9ecef;
+  border-radius: 3px;
+  position: relative;
+  overflow: visible;
+}
+
+.price-range-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #ea3943, #f7931a, #16c784);
+  border-radius: 3px;
+  max-width: 100%;
+}
+
+.price-range-indicator {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 10px;
+  height: 10px;
+  background: #1a1a1a;
+  border: 2px solid white;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.price-range-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #6c757d;
+  margin-top: 4px;
+}
+
+.mini-line-chart {
+  display: block;
+}
+
+.markets-cell {
+  min-width: 120px;
 }
 
 @media (max-width: 1024px) {

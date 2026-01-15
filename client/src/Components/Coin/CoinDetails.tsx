@@ -1,6 +1,6 @@
 import "./coin.css";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { onGetCoin, onGetCoinChartData } from "../../API/endpoints";
 import { BsGlobe, BsTwitter } from "react-icons/bs";
 import { AiOutlineFileText } from "react-icons/ai";
@@ -64,6 +64,8 @@ const CoinDetails = () => {
   const [coinAmount, setCoinAmount] = useState<string>("1");
   const [usdAmount, setUsdAmount] = useState<string>("");
   const [isUsdFirst, setIsUsdFirst] = useState(false);
+
+  const navigate = useNavigate()
 
   useEffect(() => {
     const fetchCoinDetails = async () => {
@@ -217,7 +219,9 @@ const CoinDetails = () => {
                 <div>
                   <h1>
                     {coin.name}{" "}
-                    <span className='coin-ticker'>{coin.symbol.toUpperCase()}</span>
+                    <span className='coin-ticker'>
+                      {coin.symbol.toUpperCase()}
+                    </span>
                   </h1>
                   <div className='coin-meta'>
                     <span>Rank: #{coin.market_cap_rank}</span>
@@ -232,8 +236,13 @@ const CoinDetails = () => {
                       ? "positive"
                       : "negative"
                   }>
-                  {coin.market_data.price_change_percentage_24h >= 0 ? "▲" : "▼"}{" "}
-                  {Math.abs(coin.market_data.price_change_percentage_24h).toFixed(2)}%
+                  {coin.market_data.price_change_percentage_24h >= 0
+                    ? "▲"
+                    : "▼"}{" "}
+                  {Math.abs(
+                    coin.market_data.price_change_percentage_24h
+                  ).toFixed(2)}
+                  %
                 </span>
               </div>
             </div>
@@ -242,15 +251,17 @@ const CoinDetails = () => {
               <div className='chart-controls'>
                 <div className='chart-tabs'>
                   <button
-                    className={`tab-btn ${chartType === "Price" ? "active" : ""}`}
-                    onClick={() => handleChartTypeChange("Price")}
-                  >
+                    className={`tab-btn ${
+                      chartType === "Price" ? "active" : ""
+                    }`}
+                    onClick={() => handleChartTypeChange("Price")}>
                     Price
                   </button>
                   <button
-                    className={`tab-btn ${chartType === "Market Cap" ? "active" : ""}`}
-                    onClick={() => handleChartTypeChange("Market Cap")}
-                  >
+                    className={`tab-btn ${
+                      chartType === "Market Cap" ? "active" : ""
+                    }`}
+                    onClick={() => handleChartTypeChange("Market Cap")}>
                     Market Cap
                   </button>
                 </div>
@@ -265,12 +276,16 @@ const CoinDetails = () => {
                       {tf}
                     </button>
                   ))}
-                  <button className='expand-btn' onClick={handleToggleFullscreen}>⛶</button>
+                  <button
+                    className='expand-btn'
+                    onClick={handleToggleFullscreen}>
+                    ⛶
+                  </button>
                 </div>
               </div>
-              <CoinChart 
-                data={chartDataPoints} 
-                loading={chartLoading} 
+              <CoinChart
+                data={chartDataPoints}
+                loading={chartLoading}
                 timeframe={selectedTimeframe}
                 isFullscreen={isChartFullscreen}
                 onToggleFullscreen={handleToggleFullscreen}
@@ -279,9 +294,11 @@ const CoinDetails = () => {
 
             <div className='description-section'>
               <h3>About {coin.name}</h3>
-              <div 
+              <div
                 className='description-content'
-                dangerouslySetInnerHTML={{ __html: coin.description?.en || 'No description available.' }}
+                dangerouslySetInnerHTML={{
+                  __html: coin.description?.en || "No description available.",
+                }}
               />
             </div>
           </div>
@@ -289,11 +306,15 @@ const CoinDetails = () => {
           <div className='coin-sidebar'>
             <div className='overview-card'>
               <h3>Overview</h3>
-              <div className="portfolio-btns">
-                <button className='track-btn'>
+              <div className='portfolio-btns'>
+                <button
+                  className='track-btn'
+                  onClick={() => navigate("/signup")}>
                   <GrLineChart /> Track in portfolio
                 </button>
-                <button className="watchlist-btn">
+                <button
+                  className='watchlist-btn'
+                  onClick={() => navigate("/signup")}>
                   <PiStarBold />
                 </button>
               </div>
@@ -301,13 +322,17 @@ const CoinDetails = () => {
               <div className='range-section'>
                 <h4>24h range</h4>
                 <div className='range-bar'>
-                  <div 
+                  <div
                     className='range-fill'
                     style={{
-                      width: `${((coin.market_data.current_price.usd - coin.market_data.low_24h.usd) / 
-                        (coin.market_data.high_24h.usd - coin.market_data.low_24h.usd)) * 100}%`
-                    }}
-                  ></div>
+                      width: `${
+                        ((coin.market_data.current_price.usd -
+                          coin.market_data.low_24h.usd) /
+                          (coin.market_data.high_24h.usd -
+                            coin.market_data.low_24h.usd)) *
+                        100
+                      }%`,
+                    }}></div>
                 </div>
                 <div className='range-values'>
                   <span>{formatPrice(coin.market_data.low_24h.usd)}</span>
@@ -321,8 +346,19 @@ const CoinDetails = () => {
                     Market cap <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    <span className={coin.market_data.market_cap_change_percentage_24h >= 0 ? 'positive' : 'negative'}>
-                      {coin.market_data.market_cap_change_percentage_24h >= 0 ? '▲' : '▼'} {Math.abs(coin.market_data.market_cap_change_percentage_24h).toFixed(2)}%
+                    <span
+                      className={
+                        coin.market_data.market_cap_change_percentage_24h >= 0
+                          ? "positive"
+                          : "negative"
+                      }>
+                      {coin.market_data.market_cap_change_percentage_24h >= 0
+                        ? "▲"
+                        : "▼"}{" "}
+                      {Math.abs(
+                        coin.market_data.market_cap_change_percentage_24h
+                      ).toFixed(2)}
+                      %
                     </span>{" "}
                     {formatLargeNumber(coin.market_data.market_cap.usd)}
                   </span>
@@ -343,7 +379,8 @@ const CoinDetails = () => {
                   </span>
                   <span className='stat-value'>
                     {(
-                      (coin.market_data.total_volume.usd / coin.market_data.market_cap.usd) *
+                      (coin.market_data.total_volume.usd /
+                        coin.market_data.market_cap.usd) *
                       100
                     ).toFixed(2)}
                     %
@@ -355,7 +392,8 @@ const CoinDetails = () => {
                     Circulating supply <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {formatSupply(coin.market_data.circulating_supply)} {coin.symbol.toUpperCase()}
+                    {formatSupply(coin.market_data.circulating_supply)}{" "}
+                    {coin.symbol.toUpperCase()}
                   </span>
                 </div>
 
@@ -364,7 +402,8 @@ const CoinDetails = () => {
                     Total supply <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {formatSupply(coin.market_data.total_supply)} {coin.symbol.toUpperCase()}
+                    {formatSupply(coin.market_data.total_supply)}{" "}
+                    {coin.symbol.toUpperCase()}
                   </span>
                 </div>
 
@@ -373,7 +412,9 @@ const CoinDetails = () => {
                     Max supply <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {coin.market_data.max_supply ? formatSupply(coin.market_data.max_supply) : "∞"}
+                    {coin.market_data.max_supply
+                      ? formatSupply(coin.market_data.max_supply)
+                      : "∞"}
                   </span>
                 </div>
 
@@ -382,7 +423,9 @@ const CoinDetails = () => {
                     Fully diluted valuation <span className='info-icon'>ⓘ</span>
                   </span>
                   <span className='stat-value'>
-                    {formatLargeNumber(coin.market_data.fully_diluted_valuation.usd)}
+                    {formatLargeNumber(
+                      coin.market_data.fully_diluted_valuation.usd
+                    )}
                   </span>
                 </div>
               </div>
@@ -391,22 +434,38 @@ const CoinDetails = () => {
                 <h4>Official links</h4>
                 <div className='links-buttons'>
                   {coin.links.homepage[0] && (
-                    <a href={coin.links.homepage[0]} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                    <a
+                      href={coin.links.homepage[0]}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='link-btn'>
                       <BsGlobe /> Website
                     </a>
                   )}
                   {coin.links.whitepaper && (
-                    <a href={coin.links.whitepaper} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                    <a
+                      href={coin.links.whitepaper}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='link-btn'>
                       <AiOutlineFileText /> Whitepaper
                     </a>
                   )}
                   {coin.links.twitter_screen_name && (
-                    <a href={`https://twitter.com/${coin.links.twitter_screen_name}`} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                    <a
+                      href={`https://twitter.com/${coin.links.twitter_screen_name}`}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='link-btn'>
                       <BsTwitter /> Twitter
                     </a>
                   )}
                   {coin.links.subreddit_url && (
-                    <a href={`${coin.links.subreddit_url}`} target="_blank" rel="noopener noreferrer" className='link-btn'>
+                    <a
+                      href={`${coin.links.subreddit_url}`}
+                      target='_blank'
+                      rel='noopener noreferrer'
+                      className='link-btn'>
                       <FcReddit /> Subreddit
                     </a>
                   )}
@@ -418,51 +477,62 @@ const CoinDetails = () => {
                 {isUsdFirst ? (
                   <>
                     <div className='converter-input'>
-                      <input 
-                        type='text' 
+                      <input
+                        type='text'
                         value={usdAmount}
                         onChange={handleUsdAmountChange}
-                        placeholder="0"
+                        placeholder='0'
                       />
                       <span className='currency-label'>USD</span>
                     </div>
-                    <button className='swap-btn' onClick={handleSwapAmounts}>⇅</button>
+                    <button className='swap-btn' onClick={handleSwapAmounts}>
+                      ⇅
+                    </button>
                     <div className='converter-input'>
-                      <input 
-                        type='text' 
+                      <input
+                        type='text'
                         value={coinAmount}
                         onChange={handleCoinAmountChange}
-                        placeholder="0"
+                        placeholder='0'
                       />
-                      <span className='currency-label'>{coin.symbol.toUpperCase()}</span>
+                      <span className='currency-label'>
+                        {coin.symbol.toUpperCase()}
+                      </span>
                     </div>
                     <div className='converter-rate'>
-                      $1 USD = {(1 / coin.market_data.current_price.usd).toFixed(6)} {coin.symbol.toUpperCase()}
+                      $1 USD ={" "}
+                      {(1 / coin.market_data.current_price.usd).toFixed(6)}{" "}
+                      {coin.symbol.toUpperCase()}
                     </div>
                   </>
                 ) : (
                   <>
                     <div className='converter-input'>
-                      <input 
-                        type='text' 
+                      <input
+                        type='text'
                         value={coinAmount}
                         onChange={handleCoinAmountChange}
-                        placeholder="0"
+                        placeholder='0'
                       />
-                      <span className='currency-label'>{coin.symbol.toUpperCase()}</span>
+                      <span className='currency-label'>
+                        {coin.symbol.toUpperCase()}
+                      </span>
                     </div>
-                    <button className='swap-btn' onClick={handleSwapAmounts}>⇅</button>
+                    <button className='swap-btn' onClick={handleSwapAmounts}>
+                      ⇅
+                    </button>
                     <div className='converter-input'>
-                      <input 
-                        type='text' 
+                      <input
+                        type='text'
                         value={usdAmount}
                         onChange={handleUsdAmountChange}
-                        placeholder="0"
+                        placeholder='0'
                       />
                       <span className='currency-label'>USD</span>
                     </div>
                     <div className='converter-rate'>
-                      1 {coin.symbol.toUpperCase()} = {formatPrice(coin.market_data.current_price.usd)}
+                      1 {coin.symbol.toUpperCase()} ={" "}
+                      {formatPrice(coin.market_data.current_price.usd)}
                     </div>
                   </>
                 )}

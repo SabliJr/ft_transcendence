@@ -11,7 +11,8 @@ const cgAxios = axios.create({
 
 // Getting the coins list (CoinGecko)
 const onGetCoins = async (req: Request, res: Response) => {
-  const limit = Number(req.query.limit) || 30;
+  const limit = 30; // This is the numb of coins requested per to not surpass the free tier
+  const current_page = Number(req.query.currentPage);
 
   try {
     const response = await cgAxios.get("/coins/markets", {
@@ -19,7 +20,7 @@ const onGetCoins = async (req: Request, res: Response) => {
         vs_currency: "usd",
         order: "market_cap_desc",
         per_page: limit,
-        page: 1,
+        page: current_page,
         sparkline: false,
         price_change_percentage: "24h",
       },
