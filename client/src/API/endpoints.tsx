@@ -85,9 +85,10 @@ const onRegistration = async (registrationData: iRegistrationInfo) => {
 
 // ---------------------- Market ---------------------------
 
-const onGetCoins = async () => {
+const onGetCoins = async (currentPage: number) => {
   return await axios.get(`${AUTH_SERVER}/market/coins`, {
     withCredentials: true,
+    params: { currentPage },
   });
 };
 
