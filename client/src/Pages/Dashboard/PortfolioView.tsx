@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './PortfolioView.css';
-import { FaBtc, FaEthereum, FaArrowUp, FaArrowDown } from 'react-icons/fa';
+import { FaBtc, FaEthereum } from 'react-icons/fa';
 import { SiBinance } from "react-icons/si";
 
 const PortfolioView = () => {
@@ -33,13 +33,7 @@ const PortfolioView = () => {
         status: "negative",
       },
     ];
-
-    const recentTransactions = [
-        { type: 'Sent', asset: 'BTC', amount: '0.05 BTC', usdValue: '$3,417.25', timestamp: '2h ago', status: 'sent' },
-        { type: 'Received', asset: 'ETH', amount: '1.2 ETH', usdValue: '$4,148.27', timestamp: '1d ago', status: 'received' },
-        { type: 'Sent', asset: 'BNB', amount: '10.5 BNB', usdValue: '$6,189.22', timestamp: '3d ago', status: 'sent' }
-    ];
-
+    
     return (
         <div className="portfolio-view">
             {/* 1. Portfolio Overview Header */}
@@ -115,26 +109,6 @@ const PortfolioView = () => {
                                     <p className={`change ${asset.status}`}>{asset.change}</p>
                                 </div>
                             </div>
-                        ))}
-                    </div>
-                </div>
-                <div className="portfolio-card activity-panel">
-                    <h3>Recent Activity</h3>
-                    <div className="activity-panel-list">
-                        {recentTransactions.map(tx => (
-                             <div key={tx.timestamp} className="transaction-item">
-                                 <div className={`transaction-icon ${tx.status}`}>
-                                     {tx.status === 'sent' ? <FaArrowUp /> : <FaArrowDown />}
-                                 </div>
-                                 <div className="transaction-info">
-                                     <p className="type">{tx.type} {tx.asset}</p>
-                                     <p className="timestamp">{tx.timestamp}</p>
-                                 </div>
-                                 <div className="transaction-amount">
-                                     <p className="value">{tx.amount}</p>
-                                     <p className="usd-value">{tx.usdValue}</p>
-                                 </div>
-                             </div>
                         ))}
                     </div>
                 </div>
