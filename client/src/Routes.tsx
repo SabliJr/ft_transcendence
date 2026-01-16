@@ -8,7 +8,7 @@ import PrivacyPolicy from "./Pages/Legal/privacyPolicy";
 import TermsOfService from "./Pages/Legal/TermsOfService";
 import Signup from "./Pages/Auth/signup";
 import Login from "./Pages/Auth/Login";
-// import SuccessPage from "./src/utils/channelConnectSuccess";
+import Dashboard from "./Pages/Dashboard";
 import CoinDetails from "./Components/Coin/CoinDetails";
 import About from "./Pages/About/index";
 import Market from "./Pages/Market/index";
@@ -27,7 +27,7 @@ const RoutesFile = () => {
         <Route path='/about' element={<About />} />
         <Route path='/*' element={<NotFound />} />
         <Route path='/market/coin/:id' element={<CoinDetails />} />
-        {/* <Route path='/dashboard' element={<Dashboard />} /> */}
+        <Route path='/dashboard/:id' element={<Dashboard />} />
 
         {/* <Route element={<ProtectedRoute />}> */}
         {/* <Route path='/account-settings' element={<AccountSettings />} /> */}
