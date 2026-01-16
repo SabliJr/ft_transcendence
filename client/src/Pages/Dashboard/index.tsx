@@ -2,17 +2,16 @@ import React, { useState } from "react";
 import "./dashboard.css";
 
 // Icons
-import {
-  MdOutlineNotificationsNone,
-} from "react-icons/md";
-import { BsBriefcase, BsChatDots } from "react-icons/bs";
+import { BsBriefcase } from "react-icons/bs";
 import { HiOutlineChartBar } from "react-icons/hi";
 import { RiRobot2Line } from "react-icons/ri";
 import { BiUser } from "react-icons/bi";
 import { IoHome, IoChatbubblesOutline } from "react-icons/io5";
 import { FiUser } from "react-icons/fi";
-import { MdOutlineNotificationsActive } from "react-icons/md";
-
+import {
+  MdOutlineSettings,
+} from "react-icons/md";
+import { IoMdNotificationsOutline } from "react-icons/io";
 
 import DashboardLogo from "../../Assets/_La_Logo_Black.png";
 
@@ -199,16 +198,6 @@ const Dashboard = () => {
                 <IoChatbubblesOutline className='_sidebar_icons' />
                 {!sidebarCollapsed && <span>Chat</span>}
               </div>
-              <div
-                className={`nav-item ${
-                  activePage === "notifs" ? "active" : ""
-                }`}
-                title='Notifs'
-                onClick={() => handlePageNavigation("profile")}>
-                <MdOutlineNotificationsActive className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Notifications</span>}
-              </div>
-
               <button>Post</button>
             </nav>
 
@@ -246,18 +235,14 @@ const Dashboard = () => {
               <span>{getPageTitle()}</span>
             </div>
             <div className='header-actions'>
-              <BsChatDots className='_dashboard_header_icons' title='Chat' />
-              <MdOutlineNotificationsNone
+              <IoMdNotificationsOutline
                 className='_dashboard_header_icons'
                 title='Notifications'
               />
-              <div
-                className='user-badge'
-                onClick={() => handlePageNavigation("profile")}
-                style={{ cursor: "pointer" }}
-                title='Profile Settings'>
-                <BiUser className='_dashboard_header_icons' />
-              </div>
+              <MdOutlineSettings
+                className='_dashboard_header_icons'
+                title='Settings'
+              />
             </div>
           </div>
 
