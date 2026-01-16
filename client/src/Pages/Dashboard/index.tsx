@@ -3,32 +3,33 @@ import "./dashboard.css";
 
 // Icons
 import {
-  MdOutlineSpaceDashboard,
   MdOutlineNotificationsNone,
 } from "react-icons/md";
 import { BsBriefcase, BsChatDots } from "react-icons/bs";
 import { HiOutlineChartBar } from "react-icons/hi";
-import { FiMessageSquare } from "react-icons/fi";
 import { RiRobot2Line } from "react-icons/ri";
 import { BiUser } from "react-icons/bi";
+import { IoHome, IoChatbubblesOutline } from "react-icons/io5";
+import { FiUser } from "react-icons/fi";
+import { MdOutlineNotificationsActive } from "react-icons/md";
+
 
 import DashboardLogo from "../../Assets/_La_Logo_Black.png";
 
 // Page Components
-import DashboardView from "./DashboardView";
 import PortfolioView from "./PortfolioView";
 import MarketView from "./MarketView";
 import InsightsView from "./InsightsView";
-import AIView from "./AIView"; // Changed from AnalyticsView
+import AIView from "./AIView";
 
 // Define Page Types
-type Page = "dashboard" | "portfolio" | "market" | "insights" | "ai" | "profile"; // Changed from analytics
+type Page = "portfolio" | "market" | "insights" | "ai" | "profile"; // Changed from analytics
 
 const Dashboard = () => {
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isResizing, setIsResizing] = useState<"sidebar" | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activePage, setActivePage] = useState<Page>("dashboard");
+  const [activePage, setActivePage] = useState<Page>("portfolio");
 
   const handleMouseDown = (resizer: "sidebar") => {
     setIsResizing(resizer);
@@ -73,8 +74,6 @@ const Dashboard = () => {
 
   const getPageTitle = () => {
     switch (activePage) {
-      case "dashboard":
-        return "Dashboard";
       case "portfolio":
         return "Portfolio";
       case "market":
@@ -82,18 +81,16 @@ const Dashboard = () => {
       case "insights":
         return "Insights";
       case "ai":
-        return "AI"; // Changed from analytics
+        return "AI";
       case "profile":
         return "Profile Settings";
       default:
-        return "Dashboard";
+        return "portfolio";
     }
   };
   
   const renderActiveComponent = () => {
     switch (activePage) {
-      case "dashboard":
-        return <DashboardView />;
       case "portfolio":
         return <PortfolioView />;
       case "market":
@@ -105,7 +102,7 @@ const Dashboard = () => {
       case "profile":
         return <div style={{padding: "2rem"}}><h2>Profile Settings</h2><p>User profile and settings placeholder.</p></div>; // Placeholder for profile
       default:
-        return <DashboardView />;
+        return <PortfolioView />;
     }
   };
 
@@ -150,16 +147,6 @@ const Dashboard = () => {
               )}
             </div>
             <nav className='sidebar-nav'>
-              {/* Navigation Items */}
-              <div
-                className={`nav-item ${
-                  activePage === "dashboard" ? "active" : ""
-                }`}
-                title='Dashboard'
-                onClick={() => handlePageNavigation("dashboard")}>
-                <MdOutlineSpaceDashboard className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Dashboard</span>}
-              </div>
               <div
                 className={`nav-item ${
                   activePage === "portfolio" ? "active" : ""
@@ -184,18 +171,45 @@ const Dashboard = () => {
                 }`}
                 title='Insights'
                 onClick={() => handlePageNavigation("insights")}>
-                <FiMessageSquare className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Insights</span>}
+                <IoHome className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Home</span>}
               </div>
               <div
-                className={`nav-item ${
-                  activePage === "ai" ? "active" : ""
-                }`}
+                className={`nav-item ${activePage === "ai" ? "active" : ""}`}
                 title='AI'
                 onClick={() => handlePageNavigation("ai")}>
                 <RiRobot2Line className='_sidebar_icons' />
                 {!sidebarCollapsed && <span>AI</span>}
               </div>
+              <div
+                className={`nav-item ${
+                  activePage === "profile" ? "active" : ""
+                }`}
+                title='AI'
+                onClick={() => handlePageNavigation("profile")}>
+                <FiUser className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Profile</span>}
+              </div>
+              <div
+                className={`nav-item ${
+                  activePage === "profile" ? "active" : ""
+                }`}
+                title='Chat'
+                onClick={() => handlePageNavigation("profile")}>
+                <IoChatbubblesOutline className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Chat</span>}
+              </div>
+              <div
+                className={`nav-item ${
+                  activePage === "notifs" ? "active" : ""
+                }`}
+                title='Notifs'
+                onClick={() => handlePageNavigation("profile")}>
+                <MdOutlineNotificationsActive className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Notifications</span>}
+              </div>
+
+              <button>Post</button>
             </nav>
 
             {/* Spacer to push user info to bottom */}
