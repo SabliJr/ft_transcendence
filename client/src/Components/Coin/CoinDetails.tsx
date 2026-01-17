@@ -52,8 +52,15 @@ interface ChartDataPoint {
   value: number;
 }
 
-const CoinDetails = () => {
-  const { id: coinId } = useParams<{ id: string }>();
+interface CoinDetailsProps {
+  hideLayout?: boolean;
+  coinId?: string;
+}
+
+const CoinDetails = ({ hideLayout = false, coinId: propCoinId }: CoinDetailsProps) => {
+  const { id: paramCoinId } = useParams<{ id: string }>();
+  const coinId = propCoinId || paramCoinId;
+  
   const [coin, setCoin] = useState<CoinDetailsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [selectedTimeframe, setSelectedTimeframe] = useState("7D");
@@ -205,7 +212,7 @@ const CoinDetails = () => {
 
   return (
     <>
-      <Header />
+      {!hideLayout && <Header />}
       <div className='coin-details-container'>
         <div className='coin-content'>
           <div className='coin-main'>
@@ -541,7 +548,7 @@ const CoinDetails = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      {!hideLayout && <Footer />}
     </>
   );
 };

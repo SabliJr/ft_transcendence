@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import "./dashboard.css";
 
 // Icons
@@ -17,21 +18,39 @@ import DashboardLogo from "../../Assets/_La_Logo_Black.png";
 
 // Page Components
 import PortfolioView from "./PortfolioView";
-import MarketView from "./MarketView";
 import InsightsView from "./InsightsView";
 import AIView from "./AIView";
 import ChatView from "./ChatView";
 import ProfileView from "./ProfileView";
 
 // Define Page Types
-type Page = "portfolio" | "market" | "insights" | "ai" | "profile" | "chat"; // Changed from analytics
+type Page = "portfolio" | "market" | "insights" | "ai" | "profile" | "chat";
 
 const Dashboard = () => {
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isResizing, setIsResizing] = useState<"sidebar" | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activePage, setActivePage] = useState<Page>("insights");
   const [showLogoutPopup, setShowLogoutPopup] = useState(false);
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { userId } = useParams<{ userId: string }>();
+
+  // Determine active page from URL
+  const getActivePageFromPath = (): Page => {
+    const path = location.pathname;
+    if (path.includes("/market")) return "market";
+    if (path.includes("/portfolio")) return "portfolio";
+    if (path.includes("/ai")) return "ai";
+    if (path.includes("/chat")) return "chat";
+    if (path.includes("/profile")) return "profile";
+    return "insights";
+  };
+
+  const activePage = getActivePageFromPath();
+
+  // Check if we're on a nested route that uses Outlet
+  const isNestedRoute = location.pathname !== `/dashboard/${userId}`;
 
   const handleMouseDown = (resizer: "sidebar") => {
     setIsResizing(resizer);
@@ -48,7 +67,7 @@ const Dashboard = () => {
 
     if (isResizing === "sidebar") {
       const newWidth = e.clientX - containerRect.left;
-      if (newWidth >= 80 && newWidth <= 400) { // Adjusted min/max width
+      if (newWidth >= 80 && newWidth <= 400) {
         setSidebarWidth(newWidth);
         setSidebarCollapsed(newWidth < 180);
       }
@@ -71,10 +90,35 @@ const Dashboard = () => {
   }, [isResizing]);
 
   const handlePageNavigation = (page: Page) => {
-    setActivePage(page);
+    const basePath = `/dashboard/${userId}`;
+    switch (page) {
+      case "market":
+        navigate(`${basePath}/market`);
+        break;
+      case "portfolio":
+        navigate(`${basePath}/portfolio`);
+        break;
+      case "ai":
+        navigate(`${basePath}/ai`);
+        break;
+      case "chat":
+        navigate(`${basePath}/chat`);
+        break;
+      case "profile":
+        navigate(`${basePath}/profile`);
+        break;
+      case "insights":
+        navigate(`${basePath}/home`);
+        break;
+      default:
+        navigate(basePath);
+        break;
+    }
   };
 
   const getPageTitle = () => {
+    const path = location.pathname;
+    if (path.includes("/market/coin/")) return "Coin Details";
     switch (activePage) {
       case "portfolio":
         return "Portfolio";
@@ -89,16 +133,20 @@ const Dashboard = () => {
       case "chat":
         return "Chat";
       default:
-        return "portfolio";
+        return "Home";
     }
   };
   
   const renderActiveComponent = () => {
+    // If on a nested route, render Outlet
+    if (isNestedRoute) {
+      return <Outlet />;
+    }
+
+    // Otherwise render based on activePage
     switch (activePage) {
       case "portfolio":
         return <PortfolioView />;
-      case "market":
-        return <MarketView />;
       case "insights":
         return <InsightsView />;
       case "ai":
@@ -108,7 +156,7 @@ const Dashboard = () => {
       case "chat":
         return <ChatView />;
       default:
-        return <PortfolioView />;
+        return <InsightsView />;
     }
   };
 

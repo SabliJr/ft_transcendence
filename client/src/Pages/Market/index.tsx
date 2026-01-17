@@ -7,9 +7,6 @@ import { RiFilter2Line } from "react-icons/ri";
 import { BsSearch } from "react-icons/bs";
 import { TiArrowSortedDown, TiArrowSortedUp } from "react-icons/ti";
 
-import Header from "../../LandingPage/TheHeader/index";
-import Footer from "../../LandingPage/Footer/index";
-
 interface CoinData {
   id: string;
   symbol: string;
@@ -34,7 +31,11 @@ interface CoinData {
 type SortField = 'name' | 'current_price' | 'price_change_percentage_24h' | 'market_cap' | 'total_supply' | null;
 type SortDirection = 'asc' | 'desc';
 
-const Index = () => {
+interface MarketProps {
+  basePath?: string;
+}
+
+const Index = ({ basePath = '/market' }: MarketProps) => {
   const [coins, setCoins] = useState<CoinData[]>([]);
   const [filteredCoins, setFilteredCoins] = useState<CoinData[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -125,7 +126,7 @@ const Index = () => {
   };
 
   const handleCoinClick = (coinId: string) => {
-    navigate(`/market/coin/${coinId}`);
+    navigate(`${basePath}/coin/${coinId}`);
   };
 
   const handleSort = (field: SortField) => {
@@ -259,7 +260,6 @@ const Index = () => {
 
   return (
     <main>
-      <Header />
       <div className="market-container">
         <div className="market-header">
           <h1>Cryptocurrency Market</h1>
@@ -432,7 +432,6 @@ const Index = () => {
           </>
         )}
       </div>
-      <Footer />
     </main>
   );
 };
