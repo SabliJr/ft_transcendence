@@ -437,3 +437,68 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
 }
+
+
+.post-button {
+  background-color: black;
+  color: white;
+  border-radius: 9999px;
+  padding: 1rem 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  width: 90%;
+  margin: 1rem auto;
+  font-size: 1rem;
+  border: none;
+}
+
+
+.post-button-icon {
+  margin-right: 0.5rem;
+  font-size: 1.2rem;
+}
+
+.user-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-handle {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.logout-popup {
+  position: absolute;
+  bottom: 6rem;
+  left: 1rem;
+  background-color: white;
+  border: 1px solid #dee2e6;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.logout-button {
+  background-color: transparent;
+  border: none;
+  color: black;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  width: 100%;
+  text-align: left;
+}
+
+.sidebar.collapsed .post-button {
+  width: auto;
+  padding: 1rem;
+}
+
+.sidebar.collapsed .post-button-icon {
+  margin-right: 0;
+}
+
+.sidebar.collapsed .post-button span {
+    display: none;
+}
+

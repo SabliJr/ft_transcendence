@@ -7,7 +7,7 @@ import { HiOutlineChartBar } from "react-icons/hi";
 import { RiRobot2Line } from "react-icons/ri";
 import { BiUser } from "react-icons/bi";
 import { IoHome, IoChatbubblesOutline } from "react-icons/io5";
-import { FiUser } from "react-icons/fi";
+import { FiUser, FiPlus } from "react-icons/fi";
 import {
   MdOutlineSettings,
 } from "react-icons/md";
@@ -20,15 +20,18 @@ import PortfolioView from "./PortfolioView";
 import MarketView from "./MarketView";
 import InsightsView from "./InsightsView";
 import AIView from "./AIView";
+import ChatView from "./ChatView";
+import ProfileView from "./ProfileView";
 
 // Define Page Types
-type Page = "portfolio" | "market" | "insights" | "ai" | "profile"; // Changed from analytics
+type Page = "portfolio" | "market" | "insights" | "ai" | "profile" | "chat"; // Changed from analytics
 
 const Dashboard = () => {
   const [sidebarWidth, setSidebarWidth] = useState(280);
   const [isResizing, setIsResizing] = useState<"sidebar" | null>(null);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [activePage, setActivePage] = useState<Page>("portfolio");
+  const [activePage, setActivePage] = useState<Page>("insights");
+  const [showLogoutPopup, setShowLogoutPopup] = useState(false);
 
   const handleMouseDown = (resizer: "sidebar") => {
     setIsResizing(resizer);
@@ -78,11 +81,13 @@ const Dashboard = () => {
       case "market":
         return "Market";
       case "insights":
-        return "Insights";
+        return "Home";
       case "ai":
         return "AI";
       case "profile":
         return "Profile Settings";
+      case "chat":
+        return "Chat";
       default:
         return "portfolio";
     }
@@ -97,9 +102,11 @@ const Dashboard = () => {
       case "insights":
         return <InsightsView />;
       case "ai":
-        return <AIView />; // Changed from AnalyticsView
+        return <AIView />;
       case "profile":
-        return <div style={{padding: "2rem"}}><h2>Profile Settings</h2><p>User profile and settings placeholder.</p></div>; // Placeholder for profile
+        return <ProfileView />;
+      case "chat":
+        return <ChatView />;
       default:
         return <PortfolioView />;
     }
@@ -146,14 +153,14 @@ const Dashboard = () => {
               )}
             </div>
             <nav className='sidebar-nav'>
-              <div
+            <div
                 className={`nav-item ${
-                  activePage === "portfolio" ? "active" : ""
+                  activePage === "insights" ? "active" : ""
                 }`}
-                title='Portfolio'
-                onClick={() => handlePageNavigation("portfolio")}>
-                <BsBriefcase className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Portfolio</span>}
+                title='Home'
+                onClick={() => handlePageNavigation("insights")}>
+                <IoHome className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Home</span>}
               </div>
               <div
                 className={`nav-item ${
@@ -166,12 +173,12 @@ const Dashboard = () => {
               </div>
               <div
                 className={`nav-item ${
-                  activePage === "insights" ? "active" : ""
+                  activePage === "portfolio" ? "active" : ""
                 }`}
-                title='Insights'
-                onClick={() => handlePageNavigation("insights")}>
-                <IoHome className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Home</span>}
+                title='Portfolio'
+                onClick={() => handlePageNavigation("portfolio")}>
+                <BsBriefcase className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Portfolio</span>}
               </div>
               <div
                 className={`nav-item ${activePage === "ai" ? "active" : ""}`}
@@ -182,23 +189,26 @@ const Dashboard = () => {
               </div>
               <div
                 className={`nav-item ${
-                  activePage === "profile" ? "active" : ""
+                  activePage === "chat" ? "active" : ""
                 }`}
-                title='AI'
-                onClick={() => handlePageNavigation("profile")}>
-                <FiUser className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Profile</span>}
+                title='Chat'
+                onClick={() => handlePageNavigation("chat")}>
+                <IoChatbubblesOutline className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Chat</span>}
               </div>
               <div
                 className={`nav-item ${
                   activePage === "profile" ? "active" : ""
                 }`}
-                title='Chat'
+                title='Profile'
                 onClick={() => handlePageNavigation("profile")}>
-                <IoChatbubblesOutline className='_sidebar_icons' />
-                {!sidebarCollapsed && <span>Chat</span>}
+                <FiUser className='_sidebar_icons' />
+                {!sidebarCollapsed && <span>Profile</span>}
               </div>
-              <button>Post</button>
+              <button className="post-button">
+                <FiPlus className='post-button-icon' />
+                {!sidebarCollapsed && <span>Post</span>}
+              </button>
             </nav>
 
             {/* Spacer to push user info to bottom */}
@@ -208,7 +218,7 @@ const Dashboard = () => {
               className={
                 sidebarCollapsed ? "_side_user_info_collap" : "user-info"
               }
-              onClick={() => handlePageNavigation("profile")}
+              onClick={() => setShowLogoutPopup(!showLogoutPopup)}
               style={{ cursor: "pointer" }}
               title='Profile Settings'>
               <div
@@ -217,14 +227,23 @@ const Dashboard = () => {
                 }>
                 <BiUser className='_side_prifile_icons ' />
               </div>
-              {!sidebarCollapsed && <span className='username'>Sabli Jr</span>}
+              {!sidebarCollapsed && (
+                <div className="user-details">
+                  <span className='username'>Sabli Jr</span>
+                  <span className="user-handle">@sabli_jr</span>
+                </div>
+              )}
             </div>
+            {showLogoutPopup && (
+              <div className="logout-popup">
+                <button className="logout-button">Logout</button>
+              </div>
+            )}
           </div>
           <div
             className='resize-handle sidebar-resize'
             onMouseDown={() => handleMouseDown("sidebar")}></div>
         </div>
-
         {/* Main Content Area with Header */}
         <div className='dasboard_main-content '>
           {/* Dashboard Header */}
@@ -257,3 +276,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+

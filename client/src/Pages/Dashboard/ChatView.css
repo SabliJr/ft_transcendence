@@ -1,0 +1,68 @@
+/* ChatView.css */
+
+.chat-view {
+  padding: 2rem;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+    Arial, sans-serif;
+}
+
+.chat-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chat-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.chat-item:hover {
+  background-color: #f2f2f2;
+}
+
+.chat-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #e9ecef;
+}
+
+.chat-info .chat-name {
+  font-weight: bold;
+}
+
+.chat-info .chat-message {
+  color: #536471;
+}
+
+.no-chats {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  color: #536471;
+}
+
+.start-chat-btn {
+  margin-top: 1rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  border: none;
+  background-color: #1d9bf0;
+  color: #fff;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.start-chat-btn:hover {
+  background-color: #1a8cd8;
+}
